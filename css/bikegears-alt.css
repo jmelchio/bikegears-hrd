@@ -1,0 +1,310 @@
+/* and now for something completely different */ 
+
+/*
+* { 
+    border: dashed 1px orange;
+}
+*/
+body { 
+    background: #fde7a8 url(../images/backgroundfade.png) repeat-x;
+    font-size: small;
+    font-family: verdana, sans-serif;
+    padding: 0 0 0 0;
+    margin:  0 0 0 0;
+}
+
+img { 
+    border: 0px; 
+}
+
+div { 
+    border: dashed 0px orange;
+}
+
+h2 { 
+    font-size: 110%;
+    font-style: italic;
+}
+
+p { 
+    margin: 1em 2em 1em 2em;
+}
+
+fieldset { 
+    border: solid 0px rgb(130, 130, 130);
+}
+
+input[type|="text"]:focus { 
+    background: #FFFFCC;
+}
+
+input[type|="password"]:focus { 
+    background: #FFFFCC;
+}
+
+select:focus { 
+    background: #FFFFCC;
+}
+
+textarea:focus { 
+    background: #FFFFCC;
+}
+
+div#container { 
+    margin: 20px 30px auto 30px;
+    min-width: 780px;
+    background: rgb(250, 250, 250) url(../images/sprockets-scaled-fade-bw.gif) -100px -100px no-repeat fixed;
+    padding: 0 0 0 0; 
+    border: 1px solid #999999; 
+    border-radius: 15px;
+}
+
+div#header { 
+    width: 100%;
+    padding: 0.2em 0 0.s1em 0;
+    border: 1px solid #99CCFF;
+    border-width: 0 0 1px 0;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    background: #0d5dc1 url(../images/sprockets-scaled-fade-blue.gif) -100px -100px no-repeat fixed;
+	clear: both;
+} 
+
+#header p { 
+    margin: 0 0 0 0;
+    padding: 0 0 0 0;
+    text-align: center;
+}
+
+#header p + p {
+    color: #99CCFF;
+    text-align: right;
+    margin: 0.2em 4em;
+}
+
+#header a {
+    color: white;
+    text-decoration: none;
+    font-style: italic;
+}
+
+div#menu { 
+	float: left;
+	width: 12em;
+    margin: 1em ;
+    padding: 0em;
+    border: 1px solid #99CCFF;
+    border-radius: 10px;
+}
+
+#menu p { /*margin-left: 1em;*/
+    font-style: italic;
+    color: #724085;
+    border-radius: 8px;
+}
+
+div#content { 
+    margin: 1em 1em 1em 14em;
+    padding: 0em;
+    width: auto;
+}
+
+#content h2 { 
+    border: solid 1px #99CCFF;
+    border-radius: 8px;
+    text-align: left;
+    padding: 0.2em 1em 0.1em 2em;
+    margin: 0 0 0 0;
+    color: white;
+    background: #0d5dc1 url(../images/sprockets-scaled-fade-blue.gif) -100px -100px no-repeat fixed;
+}
+
+div#footer { 
+    width: 100%;
+    clear: both;
+    text-align: center;
+    margin: 1em 0 0.75em 0;
+    padding: 0.25em 0em 0.25em 0em;
+    border: 1px solid #99CCFF;
+    border-width: 1px 0 0 0;
+}
+
+#footer p { margin: 0 2em 0 2em;
+}
+
+#menu ul {
+    text-align: left;
+}
+
+#menu li {
+    display: inline;
+    list-style-type: none;
+}
+
+#menu a { 
+    display: block;
+    margin: 0.2em;
+    padding: 0.2em 0.5em 0.1em 0.5em;
+    text-decoration: none;
+    font-weight: bold;
+    color: #0d5dc1;
+    border-color: rgb(130, 130, 130);
+    border-style: solid;
+    border-collapse: collapse;
+    border-width: 0px;
+    border-radius: 8px;
+}
+
+#menu a:hover { 
+    color: white;
+    background: #0d5dc1 url(../images/sprockets-scaled-fade-blue.gif) -100px -100px no-repeat fixed;
+}
+
+#menu a:first-child {
+	margin-top: 0.2em;
+}
+
+#menu a:last-child {
+    border-width: 0px;
+}
+
+#menu p {
+    display: block;
+    margin: 0.2em;
+    padding: 0.2em 0.5em 0.1em 0.5em;
+    text-decoration: none;
+    font-weight: bold;
+    color: white;
+    background: #99CCFF url(../images/sprockets-scaled-fade-blue.gif) -100px -100px no-repeat fixed;
+    border-color: rgb(130, 130, 130);
+    border-style: solid;
+    border-collapse: collapse;
+    border-width: 0px;
+}
+
+p.error { 
+    color: red;
+}
+
+table { 
+    margin: 1em 2em 1em 2em;
+    border-collapse: collapse;
+}
+
+fieldset table {
+    border-width: 0px; 
+    border-style: dotted;
+}
+
+table.tabular {
+    width: 90%;
+}
+
+th { 
+    font-size: 100%; 
+    font-style: italic;
+    color: #0d5dc1;
+    padding: 0.2em 5px 0.1em 5px;
+    vertical-align: top;
+    text-align: left;
+    background-color: rgb(255, 255, 255);
+    border-width: 1px 0px 1px 0px;
+    border-color: rgb(130, 130, 130);
+    border-style: solid;
+}
+
+th.date { 
+    text-align: center;
+    white-space: nowrap;
+}
+
+th.number { 
+    text-align: right;
+    white-space: nowrap;
+}
+
+th.text { 
+    text-align: left;
+}
+
+th.nowrap {
+    white-space: nowrap;
+}
+
+th.nowrapTop {
+    white-space: nowrap;
+    vertical-align: top;
+}
+
+th:first-child {
+    border-width: 1px 0px 1px 1px;
+}
+
+th:last-child {
+    border-width: 1px 1px 1px 0px;
+}
+
+tr.odd {
+    background: white;
+}
+
+tr.even {
+    background: #fde7a8;
+}
+
+td { 
+    padding: 1px 5px 1px 5px;
+    vertical-align: baseline;
+    border-width: 0px 0px 1px 0px;
+    border-color: rgb(130, 130, 130);
+    border-style: solid;
+}
+
+td:last-child {
+    border-width: 0px 1px 1px 0px;
+}
+
+td:first-child {
+    border-width: 0px 0px 1px 1px;
+}
+
+td.date { 
+    text-align: center;
+    white-space: nowrap;
+}
+
+td.number { 
+    text-align: right;
+    white-space: nowrap;
+}
+
+td.text { 
+    text-align: left;
+}
+
+td.nowrap {
+    white-space: nowrap;
+}
+
+td.nowrapTop {
+    white-space: nowrap;
+    vertical-align: top;
+}
+
+fieldset table tr td {
+    border-width: 0px;
+}
+
+fieldset table tr td:last-child {
+    border-width: 0px 0px 0px 0px;
+}
+
+fieldset table tr td:first-child {
+    border-width: 0px 0px 0px 0px;
+}
+
+.error {
+    color: red;
+}
+
+/* That's All Folks !! */

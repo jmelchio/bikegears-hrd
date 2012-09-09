@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}BikeGears - Bike overview{% endblock %}
+{% block content %}
+<h2>Bike overview</h2>
+<p>
+    The bike overview page ...
+</p>
+<h2>Rider's bikes</h2>
+{% if bikes %}
+<table class="tabular">
+    <tr>
+        <th>Brand</th>
+        <th>Model</th>
+        <th>Year</th>
+        <th>Color</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th></th>
+    </tr>
+    <tbody>
+        {% for bike in bikes %}
+        <tr class="{% cycle even,odd %}">
+            <td class="nowrap">{{bike.brand}}</td>
+            <td class="nowrap">{{bike.model}}</td>
+            <td>{{bike.year}}</td>
+            <td>{{bike.color}}</td>
+            <td class="nowrap">{{bike.bikeType.name}}</td>
+            <td>{{bike.description}}</td>
+            <td><a href="/user/bikeentry?id={{bike.key.id}}">update</a>&nbsp;<a href="/user/bikedelete?id={{bike.key.id}}">delete</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>No bikes available..</p>
+{% endif %}
+<h2>Available types</h2>
+{% if biketypes %}
+<table class="tabular">
+    <tr>
+        <th>Name</th>
+        <th>Description</th>
+    </tr>
+    <tbody>
+        {% for type in biketypes %}
+        <tr class="{% cycle even,odd %}">
+            <td class="nowrap">{{type.name}}</td>
+            <td>{{type.description}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>No biketypes available..</p>
+{% endif %}
+{% endblock %}

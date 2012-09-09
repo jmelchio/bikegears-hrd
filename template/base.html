@@ -1,0 +1,42 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" href="{% block stylesheet %}/css/bikegears-alt.css{% endblock %}"/>
+    <title>{% block title %} BikeGearss {% endblock %}</title>
+</head>
+
+<body>
+    <div id="container">
+        <div id="header">
+            {% block header %}
+            <p><a href="/"><img src="/images/bike-gears-title.png"/></a></p>
+            <p>{{user_name}}: <a href="{{url}}">{{url_linktext}}</a></p>
+            {% endblock %}
+        </div>
+        <div id="menu">
+            {% block menu %}
+            {% for element in menu %}
+			{% if element.active %}
+			<p>{{element.name}}</p>
+			{% else %}
+            <a href="/{{element.link}}">{{element.name}}</a>
+			{% endif %}
+            {% endfor %}
+            {% endblock %}
+        </div>
+        <div id="content">
+            {% block content %}
+            {% endblock %}
+        </div>
+        <div id="footer">
+            {% block footer %}
+            <a href="http://appengine.google.com"><img src="http://code.google.com/appengine/images/appengine-silver-120x30.gif" 
+			alt="Powered by Google App Engine" /></a>
+            {% endblock %}
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}BikeGears - Bike Entry{% endblock %}
+{% block content %}
+<h2>{{submitValue}} bike</h2>
+<p><span>{{message}}</span></p>
+<p>
+    <form action="/user/bikeentry" method="post">
+        <fieldset>
+			<input name="_id" type="hidden" value="{{id}}">
+            <table>
+                <tr>
+                    <td class="nowrap"><label for="id_brand">Brand</label></td>
+                    <td>{{ form.brand }}
+                        {% if form.brand.errors %}
+                        <span class="error">{{ form.brand.errors|join:", "}}</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="nowrap"><label for="id_model">Model</label></td>
+                    <td>{{ form.model }}
+                        {% if form.model.errors %}
+                        <span class="error">{{ form.model.errors|join:", "}}</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="nowrap"><label for="id_year">Year</label></td>
+                    <td>{{ form.year }}
+                        {% if form.year.errors %}
+                        <span class="error">{{ form.year.errors|join:", "}}</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="nowrap"><label for="id_color">Color</label></td>
+                    <td>{{ form.color }}
+                        {% if form.color.errors %}
+                        <span class="error">{{ form.color.errors|join:", "}}</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="nowrap"><label for="id_bikeType">Type</label></td>
+                    <td>{{ form.bikeType }} 
+                        {% if form.bikeType.errors %}
+                        <span class="error">{{ form.bikeType.errors|join:", "}}</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="nowrapTop"><label for="id_description">Description</label></td>
+                    <td>{{ form.description }}
+                        {% if form.description.errors %}
+                        <span class="error">{{ form.description.errors|join:", "}}</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2"><input type="submit" value="{{submitValue}}"/></td>
+                </tr>
+            </table>
+        </fieldset>
+    </form>
+</p>
+{% endblock %}
