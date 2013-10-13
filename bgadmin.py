@@ -8,10 +8,9 @@ Copyright (c) 2008 Melchior I.T. Inc.. All rights reserved.
 """
 
 import os
-import wsgiref.handlers
 from google.appengine.api import users
 from google.appengine.ext import db
-from google.appengine.ext import webapp
+import webapp2
 from google.appengine.ext.webapp import template
 from model import BikeType, RideType
 from forms import BikeTypeForm, RideTypeForm
@@ -113,15 +112,11 @@ class BikeTypeEntry(webapp.RequestHandler):
             template_values['id'] = id
             self.response.out.write(template.render(path, template_values))
 
-def main():
-    application = webapp.WSGIApplication([('/admin', MainAdmin)
-                                        , ('/admin/ridetypeentry', RideTypeEntry)
-                                        , ('/admin/biketypeentry', BikeTypeEntry)
-                                        , ('/admin.*', FourOhFour)]
-                                        , debug=True)
-    wsgiref.handlers.CGIHandler().run(application)
 
+app = webapp2.WSGIApplication([('/admin', MainAdmin)
+                             , ('/admin/ridetypeentry', RideTypeEntry)
+                             , ('/admin/biketypeentry', BikeTypeEntry)
+                             , ('/admin.*', FourOhFour)]
+                             , debug=True)
 
-if __name__ == '__main__':
-    main()
-
+# That's All Folks!

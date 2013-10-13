@@ -8,8 +8,7 @@ Copyright (c) 2008 Melchior I.T. Inc.. All rights reserved.
 """
 
 import os
-import wsgiref.handlers
-from google.appengine.ext import webapp
+import webapp2
 from google.appengine.ext.webapp import template
 from helpers import makeMenu, makeUserLinks
 from bikegears import FourOhFour
@@ -22,13 +21,9 @@ class Welcome(webapp.RequestHandler):
         template_values['menu'] = makeMenu('')
         self.response.out.write(template.render(path, template_values))
 
-def main():
-    application = webapp.WSGIApplication([('/', Welcome)
-                                        , ('/.*', FourOhFour)]
-                                        , debug=True)
-    wsgiref.handlers.CGIHandler().run(application)
 
+app = webapp2.WSGIApplication([('/', Welcome)
+                             , ('/.*', FourOhFour)]
+                             , debug=True)
 
-if __name__ == '__main__':
-	main()
-
+# That's All Folks!

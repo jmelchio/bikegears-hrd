@@ -7,11 +7,10 @@ Created by Joris Melchior on 2008-06-06.
 Copyright (c) 2008 Melchior I.T. Inc.. All rights reserved.
 """
 import os
-import wsgiref.handlers
+import webapp2
 import logging
 from google.appengine.api import users
 from google.appengine.ext import db
-from google.appengine.ext import webapp
 from google.appengine.ext.webapp import template
 from model import Bike, BikeRide, BikeType
 from forms import BikeForm, BikeRideForm
@@ -154,14 +153,11 @@ class FourOhFour(webapp.RequestHandler):
         self.response.out.write(template.render(path, template_values))
 
 
-def main():
-    application = webapp.WSGIApplication([('/user/bikeoverview', BikeOverview)
-                                        , ('/user/rideroverview', RiderOverview)
-                                        , ('/user/rideentry', RideEntry)
-                                        , ('/user/bikeentry', BikeEntry)
-                                        , ('/user.*', FourOhFour)]
-                                        , debug=True)
-    wsgiref.handlers.CGIHandler().run(application)
+app = webapp2.WSGIApplication([('/user/bikeoverview', BikeOverview)
+                              , ('/user/rideroverview', RiderOverview)
+                              , ('/user/rideentry', RideEntry)
+                              , ('/user/bikeentry', BikeEntry)
+                              , ('/user.*', FourOhFour)]
+                              , debug=True)
 
-if __name__ == '__main__':
-    main()
+# That's All Folks!
