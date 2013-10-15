@@ -13,7 +13,7 @@ from google.appengine.ext.webapp import template
 from helpers import makeMenu, makeUserLinks
 from bikegears import FourOhFour
 
-class Welcome(webapp.RequestHandler):
+class Welcome(webapp2.RequestHandler):
     """Main welcome page handler for the application"""
     def get(self):
         path = os.path.join(os.path.dirname(__file__), 'template/welcome.html')

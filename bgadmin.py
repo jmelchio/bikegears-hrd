@@ -9,7 +9,7 @@ Copyright (c) 2008 Melchior I.T. Inc.. All rights reserved.
 
 import os
 from google.appengine.api import users
-from google.appengine.ext import db
+from google.appengine.ext import ndb
 import webapp2
 from google.appengine.ext.webapp import template
 from model import BikeType, RideType
@@ -17,7 +17,7 @@ from forms import BikeTypeForm, RideTypeForm
 from bikegears import FourOhFour
 from helpers import makeUserLinks, makeAdminMenu
 
-class MainAdmin(webapp.RequestHandler):
+class MainAdmin(webapp2.RequestHandler):
     """Main admin screen handler"""
     def get(self):
         path = os.path.join(os.path.dirname(__file__), 'template/adminwelcome.html')
@@ -27,7 +27,7 @@ class MainAdmin(webapp.RequestHandler):
         template_values['rideTypes'] = RideType.all()
         self.response.out.write(template.render(path, template_values))
 
-class RideTypeEntry(webapp.RequestHandler):
+class RideTypeEntry(webapp2.RequestHandler):
     """Handler for adding and updating RideType objects"""
     def get(self):
         template_values = makeUserLinks(self.request.uri)
@@ -70,7 +70,7 @@ class RideTypeEntry(webapp.RequestHandler):
             self.response.out.write(template.render(path, template_values))
     
 
-class BikeTypeEntry(webapp.RequestHandler):
+class BikeTypeEntry(webapp2.RequestHandler):
     """Handler for adding and updating BikeType objects"""
     def get(self):
         template_values = makeUserLinks(self.request.uri)

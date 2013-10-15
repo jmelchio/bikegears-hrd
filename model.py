@@ -7,53 +7,53 @@ Created by Joris Melchior on 2008-06-07.
 Copyright (c) 2008 Melchior I.T. Inc.. All rights reserved.
 """
 from datetime import time
-from google.appengine.ext import db
+from google.appengine.ext import ndb
 
-class BikeType(db.Model):
+class BikeType(ndb.Model):
     """docstring for BikeType"""
-    name = db.StringProperty(required=True)
-    description = db.StringProperty(required=True, multiline=True)
+    name = ndb.StringProperty(required=True)
+    description = ndb.StringProperty(required=True)
     
     def __str__(self):
         return self.name
 
 
-class Bike(db.Model):
+class Bike(ndb.Model):
     """docstring for Bike"""
-    brand = db.StringProperty(required=True)
-    model = db.StringProperty(required=True)
-    color = db.StringProperty()
-    year = db.IntegerProperty()
-    description = db.StringProperty(multiline=True)
-    bikeType = db.ReferenceProperty(BikeType, required=True)
-    bikeRider = db.UserProperty()
+    brand = ndb.StringProperty(required=True)
+    model = ndb.StringProperty(required=True)
+    color = ndb.StringProperty()
+    year = ndb.IntegerProperty()
+    description = ndb.StringProperty()
+    bikeType = ndb.KeyProperty(kind=BikeType, required=True)
+    bikeRider = ndb.UserProperty()
     
     def __str__(self):
         return '%s %s' % (self.brand, self.model)
 
-class RideType(db.Model):
+class RideType(ndb.Model):
     """docstring for RideType"""
-    name = db.StringProperty(required=True)
-    description = db.StringProperty(required=True, multiline=True)
+    name = ndb.StringProperty(required=True)
+    description = ndb.StringProperty(required=True)
     
     def __str__(self):
         return self.name
 
 
-class BikeRide(db.Model):
+class BikeRide(ndb.Model):
     """docstring for BikeRide"""
-    date = db.DateProperty(required=True)
-    startLocation = db.StringProperty()
-    finishLocation = db.StringProperty()
-    distanceKm = db.FloatProperty(required=True)
-    rideTimeSeconds = db.IntegerProperty()
-    averageHr = db.IntegerProperty()
-    maximumHr = db.IntegerProperty()
-    caloriesBurnt = db.IntegerProperty()
-    journal = db.StringProperty(multiline=True)
-    bikeRider = db.UserProperty()
-    rideType = db.ReferenceProperty(RideType, required=True)
-    bike = db.ReferenceProperty(Bike, required=True)
+    date = ndb.DateProperty(required=True)
+    startLocation = ndb.StringProperty()
+    finishLocation = ndb.StringProperty()
+    distanceKm = ndb.FloatProperty(required=True)
+    rideTimeSeconds = ndb.IntegerProperty()
+    averageHr = ndb.IntegerProperty()
+    maximumHr = ndb.IntegerProperty()
+    caloriesBurnt = ndb.IntegerProperty()
+    journal = ndb.StringProperty()
+    bikeRider = ndb.UserProperty()
+    rideType = ndb.KeyProperty(kind=RideType, required=True)
+    bike = ndb.KeyProperty(kind=Bike, required=True)
     
     def __str__(self):
         return '%s %s' % (self.date, self.distanceKm)

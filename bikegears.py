@@ -10,14 +10,14 @@ import os
 import webapp2
 import logging
 from google.appengine.api import users
-from google.appengine.ext import db
+from google.appengine.ext import ndb
 from google.appengine.ext.webapp import template
 from model import Bike, BikeRide, BikeType
 from forms import BikeForm, BikeRideForm
 from helpers import makeMenu, makeUserLinks
 from datetime import date
 
-class BikeOverview(webapp.RequestHandler):
+class BikeOverview(webapp2.RequestHandler):
     """overview page for bikes of the rider"""
     def get(self):
         path = os.path.join(os.path.dirname(__file__), 'template/bikeoverview.html')
@@ -28,7 +28,7 @@ class BikeOverview(webapp.RequestHandler):
         self.response.out.write(template.render(path, template_values))
 
 
-class RiderOverview(webapp.RequestHandler):
+class RiderOverview(webapp2.RequestHandler):
     """Overview page for recent rides and totals of the rider
        
        This page currently shows the 10 most recent rides of the rider with options to edit or
@@ -45,7 +45,7 @@ class RiderOverview(webapp.RequestHandler):
         self.response.out.write(template.render(path, template_values))
 
 
-class BikeEntry(webapp.RequestHandler):
+class BikeEntry(webapp2.RequestHandler):
     """Handler for entry of the bike both get and post actions
        
        This handler will fetch, insert and update entries for the Bike class.
@@ -97,7 +97,7 @@ class BikeEntry(webapp.RequestHandler):
     
 
 
-class RideEntry(webapp.RequestHandler):
+class RideEntry(webapp2.RequestHandler):
     """handler for entry of the bike rides both get and post actions"""
     def get(self):
         template_values = makeUserLinks(self.request.uri)
@@ -143,7 +143,7 @@ class RideEntry(webapp.RequestHandler):
             self.response.out.write(template.render(path, template_values))
     
 
-class FourOhFour(webapp.RequestHandler):
+class FourOhFour(webapp2.RequestHandler):
     """Handler for all pages that don't have an explicit handler (404)"""
     def get(self):
         path = os.path.join(os.path.dirname(__file__), 'template/under_construction.html')
