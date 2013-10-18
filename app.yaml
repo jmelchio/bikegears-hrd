@@ -19,3 +19,9 @@ handlers:
   login: required
 - url: /
   script: welcome.app
+  
+libraries:
+- name: jinja2
+  version: "2.6"
+- name: webapp2
+  version: "2.5.2"

@@ -9,7 +9,7 @@ Copyright (c) 2008 Melchior I.T. Inc.. All rights reserved.
 
 from model import Bike, BikeRide, BikeType, RideType
 from google.appengine.api import users
-from google.appengine.ext.ndb import djangoforms
+
 
 class BikeForm(djangoforms.ModelForm):
     class Meta:
