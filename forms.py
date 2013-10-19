@@ -9,36 +9,15 @@ Copyright (c) 2008 Melchior I.T. Inc.. All rights reserved.
 
 from model import Bike, BikeRide, BikeType, RideType
 from google.appengine.api import users
+from wtforms.ext.appengine import ndb, fields
 
+BikeForm = ndb.model_form(Bike, exclude=['bikeRider'])
 
-class BikeForm(djangoforms.ModelForm):
-    class Meta:
-        model = Bike
-        exclude = ['bikeRider']
-    
+BikeRideForm = ndb.model_form(BikeRide, exclude=['bikeRider'])
+# todo: need to get a query to get bike per bikeRider fields.KeyPropertyField?
 
+BikeTypeForm = ndb.model_form(BikeType)
 
-class BikeRideForm(djangoforms.ModelForm):
-    bike = djangoforms.ModelChoiceField(Bike, None)
-    
-    def __init__(self, *args, **kwargs):
-        self.base_fields['bike'].query = Bike.all().filter('bikeRider = ', users.get_current_user())
-        self.base_fields['bike'].widget.choices = self.base_fields['bike'].choices
-        super(BikeRideForm, self).__init__(*args, **kwargs)
-    
-    class Meta:
-        model = BikeRide
-        exclude = ['bikeRider']
-    
+RideTypeForm = ndb.model_form(RideType)
 
-
-class BikeTypeForm(djangoforms.ModelForm):
-    class Meta:
-        model = BikeType
-    
-
-
-class RideTypeForm(djangoforms.ModelForm):
-    class Meta:
-        model = RideType
-    
+# That's All Folks!!
