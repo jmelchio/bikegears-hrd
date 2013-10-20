@@ -8,24 +8,30 @@ Copyright (c) 2008 Melchior I.T. Inc.. All rights reserved.
 """
 import os
 import webapp2
+import jinja2
 import logging
 from google.appengine.api import users
 from google.appengine.ext import ndb
-from google.appengine.ext.webapp import template
 from model import Bike, BikeRide, BikeType
 from forms import BikeForm, BikeRideForm
 from helpers import makeMenu, makeUserLinks
 from datetime import date
 
+jinjaEnvironment = jinja2.Environment(
+    loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
+    extensions=['jinja2.ext.autoescape'],
+    autoescape=True)
+
 class BikeOverview(webapp2.RequestHandler):
     """overview page for bikes of the rider"""
     def get(self):
-        path = os.path.join(os.path.dirname(__file__), 'template/bikeoverview.html')
+        curUser = users.get_current_user()
+        template = jinjaEnvironment.get_template('template/bikeoverview.html')
         template_values = makeUserLinks(self.request.uri)
         template_values['menu'] = makeMenu(page='user/bikeoverview')
-        template_values['bikes'] = Bike.all().filter('bikeRider = ', users.get_current_user())
-        template_values['biketypes'] = BikeType.all()
-        self.response.out.write(template.render(path, template_values))
+        template_values['bikes'] = Bike.query(Bike.bikeRider==curUser).fetch()
+        template_values['biketypes'] = BikeType.query().fetch()
+        self.response.out.write(template.render(template_values))
 
 
 class RiderOverview(webapp2.RequestHandler):
@@ -38,11 +44,12 @@ class RiderOverview(webapp2.RequestHandler):
        way of providing the totals without making it too much of a hack.
     """
     def get(self):
-        path = os.path.join(os.path.dirname(__file__), 'template/rideroverview.html')
+        curUser = users.get_current_user()
+        template = jinjaEnvironment.get_template('template/rideroverview.html')
         template_values = makeUserLinks(self.request.uri)
         template_values['menu'] = makeMenu(page='user/rideroverview')
-        template_values['rides'] = BikeRide.gql('where bikeRider = :1 order by date desc', users.get_current_user()).fetch(limit=10)
-        self.response.out.write(template.render(path, template_values))
+        template_values['rides'] = BikeRide.query(BikeRide.bikeRider==curUser).order(-BikeRide.date).fetch(20)
+        self.response.out.write(template.render(template_values))
 
 
 class BikeEntry(webapp2.RequestHandler):
@@ -57,23 +64,23 @@ class BikeEntry(webapp2.RequestHandler):
         template_values = makeUserLinks(self.request.uri)
         try:
             id = int(self.request.get('id'))
-            bike = Bike.get(db.Key.from_path('Bike', id))
+            bike = Key(Bike, id).get()
             template_values['submitValue'] = 'Update'
         except ValueError:
             id = None
             bike = None
             template_values['submitValue'] = 'Create'
         
-        path = os.path.join(os.path.dirname(__file__), 'template/bikeentry.html')
+        template = jinjaEnvironment.get_template('template/bikeentry.html')
         template_values['menu'] = makeMenu(page='user/bikeentry')
         template_values['form'] = BikeForm(instance=bike)
         template_values['id'] = id
-        self.response.out.write(template.render(path, template_values))
+        self.response.out.write(template.render(template_values))
     
     def post(self):
         try:
             id = int(self.request.get('_id'))
-            bike = Bike.get(db.Key.from_path('Bike', id))
+            bike = Key(Bike, id).get()
         except ValueError:
             bike = None
             id = None
@@ -87,13 +94,13 @@ class BikeEntry(webapp2.RequestHandler):
             self.redirect('/user/bikeoverview')
         else:
             # back to form for editing
-            path = os.path.join(os.path.dirname(__file__), 'template/bikeentry.html')
+            template = jinjaEnvironment.get_template('template/bikeentry.html')
             template_values = makeUserLinks(self.request.uri)
             template_values['menu'] = makeMenu(page='user/bikeentry')
             template_values['submitValue'] = 'Fix'
             template_values['form'] = data
             template_values['id'] = id
-            self.response.out.write(template.render(path, template_values))
+            self.response.out.write(template.render(template_values))
     
 
 
@@ -103,7 +110,7 @@ class RideEntry(webapp2.RequestHandler):
         template_values = makeUserLinks(self.request.uri)
         try:
             id = int(self.request.get('id'))
-            bikeRide = BikeRide.get(db.Key.from_path('BikeRide', id))
+            bikeRide = Key(BikeRide, id).get()
             template_values['submitValue'] = 'Update'
             template_values['form'] = BikeRideForm(instance=bikeRide)
         except ValueError:
@@ -112,15 +119,15 @@ class RideEntry(webapp2.RequestHandler):
             template_values['submitValue'] = 'Create'
             template_values['form'] = BikeRideForm(initial={'date':date.today().isoformat()})
         
-        path = os.path.join(os.path.dirname(__file__), 'template/rideentry.html')
+        template = jinjaEnvironment.get_template('template/rideentry.html')
         template_values['menu'] = makeMenu(page='user/rideentry')
         template_values['id'] = id
-        self.response.out.write(template.render(path, template_values))
+        self.response.out.write(template.render(template_values))
     
     def post(self):
         try:
             id = int(self.request.get('_id'))
-            bikeRide = BikeRide.get(db.Key.from_path('BikeRide', id))
+            bikeRide = Key(BikeRide, id).get()
         except ValueError:
             bikeRide = None
             id = None
@@ -134,23 +141,23 @@ class RideEntry(webapp2.RequestHandler):
             entity.put()
             self.redirect('/user/rideroverview')
         else:
-            path = os.path.join(os.path.dirname(__file__), 'template/rideentry.html')
+            template = jinjaEnvironment.get_template('template/rideentry.html')
             template_values = makeUserLinks(self.request.uri)
             template_values['menu'] = makeMenu(page='user/rideentry')
             template_values['submitValue'] = 'Fix'
             template_values['form'] = data
             template_values['id'] = id
-            self.response.out.write(template.render(path, template_values))
+            self.response.out.write(template.render(template_values))
     
 
 class FourOhFour(webapp2.RequestHandler):
     """Handler for all pages that don't have an explicit handler (404)"""
     def get(self):
-        path = os.path.join(os.path.dirname(__file__), 'template/under_construction.html')
+        template = jinjaEnvironment.get_template('template/under_construction.html')
         template_values = makeUserLinks(self.request.uri)
         template_values['menu'] = makeMenu()
         template_values['message'] = 'Requested page not found'
-        self.response.out.write(template.render(path, template_values))
+        self.response.out.write(template.render(template_values))
 
 
 app = webapp2.WSGIApplication([('/user/bikeoverview', BikeOverview)

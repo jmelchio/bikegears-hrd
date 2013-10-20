@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "template/base.html" %}
 {% block title %}BikeGears - Bike overview{% endblock %}
 {% block content %}
 <h2>Bike overview</h2>
@@ -19,7 +19,7 @@
     </tr>
     <tbody>
         {% for bike in bikes %}
-        <tr class="{% cycle even,odd %}">
+        <tr class="{{ loop.cycle('even', 'odd') }}">
             <td class="nowrap">{{bike.brand}}</td>
             <td class="nowrap">{{bike.model}}</td>
             <td>{{bike.year}}</td>
@@ -43,7 +43,7 @@
     </tr>
     <tbody>
         {% for type in biketypes %}
-        <tr class="{% cycle even,odd %}">
+        <tr class="{{ loop.cycle('even', 'odd') }}">
             <td class="nowrap">{{type.name}}</td>
             <td>{{type.description}}</td>
         </tr>

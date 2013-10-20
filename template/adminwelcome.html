@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "template/base.html" %}
 {% block title %}BikeGears - Admin Welcome{% endblock %}
 {% block content %}
 <h2>Admin Page</h2>
@@ -17,7 +17,7 @@
 		<th width="20%"></th>
     </tr>
     {% for bikeType in bikeTypes %}
-    <tr class="{% cycle even,odd %}">
+    <tr class="{{ loop.cycle('even', 'odd') }}">
         <td>{{bikeType.name}}</td>
         <td>{{bikeType.description}}</td>
         <td><a href="/admin/biketypeentry?id={{bikeType.key.id}}">update</a>&nbsp;<a href="/admin/biketypedelete?id={{bikeType.key.id}}">delete</a></td>
@@ -38,7 +38,7 @@
 		<th width="20%"></th>
     </tr>
     {% for rideType in rideTypes %}
-    <tr class="{% cycle even,odd %}">
+    <tr class="{{ loop.cycle('even', 'odd') }}">
         <td>{{rideType.name}}</td>
         <td>{{rideType.description}}</td>
         <td><a href="/admin/ridetypeentry?id={{rideType.key.id}}">update</a>&nbsp;<a href="/admin/ridetypedelete?id={{rideType.key.id}}">delete</a></td>

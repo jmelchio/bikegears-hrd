@@ -9,17 +9,22 @@ Copyright (c) 2008 Melchior I.T. Inc.. All rights reserved.
 
 import os
 import webapp2
-from google.appengine.ext.webapp import template
+import jinja2
 from helpers import makeMenu, makeUserLinks
 from bikegears import FourOhFour
+
+jinjaEnvironment = jinja2.Environment(
+    loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
+    extensions=['jinja2.ext.autoescape'],
+    autoescape=True)
 
 class Welcome(webapp2.RequestHandler):
     """Main welcome page handler for the application"""
     def get(self):
-        path = os.path.join(os.path.dirname(__file__), 'template/welcome.html')
+        template = jinjaEnvironment.get_template('template/welcome.html')
         template_values = makeUserLinks(self.request.uri)
         template_values['menu'] = makeMenu('')
-        self.response.out.write(template.render(path, template_values))
+        self.response.out.write(template.render(template_values))
 
 
 app = webapp2.WSGIApplication([('/', Welcome)

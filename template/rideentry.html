@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "template/base.html" %}
 {% block title %}BikeGears - Ride Entry{% endblock %}
 {% block content %}
 <h2>{{submitValue}} bikeride</h2>
@@ -12,7 +12,7 @@
                     <td class="nowrap"><label for="id_date">Ride date</label></td>
                     <td>{{ form.date }}
                         {% if form.date.errors %}
-                        <span class="error">{{ form.date.errors|join:", "}}</span>
+                        <span class="error">{{ form.date.errors|join(', ')}}</span>
                         {% endif %}
                     </td>
                 </tr>
@@ -20,7 +20,7 @@
                     <td class="nowrap"><label for="id_startLocation">Start location</label></td>
                     <td>{{ form.startLocation }}
                         {% if form.startLocation.errors %}
-                        <span class="error">{{ form.startLocation.errors|join:", "}}</span>
+                        <span class="error">{{ form.startLocation.errors|join(', ')}}</span>
                         {% endif %}
                     </td>
                 </tr>
@@ -28,7 +28,7 @@
                     <td class="nowrap"><label for="id_finishLocation">Finish location</label></td>
                     <td>{{ form.finishLocation }}
                         {% if form.finishLocation.errors %}
-                        <span class="error">{{ form.finishLocation.errors|join:", "}}</span>
+                        <span class="error">{{ form.finishLocation.errors|join(', ')}}</span>
                         {% endif %}
                     </td>
                 </tr>
@@ -36,7 +36,7 @@
                     <td class="nowrap"><label for="id_distanceKm">Distance</label></td>
                     <td>{{ form.distanceKm }}
                         {% if form.distanceKm.errors %}
-                        <span class="error">{{ form.distanceKm.errors|join:", "}}</span>
+                        <span class="error">{{ form.distanceKm.errors|join(', ')}}</span>
                         {% endif %}
                     </td>
                 </tr>
@@ -44,7 +44,7 @@
                     <td class="nowrap"><label for="id_rideTimeSeconds">Ride time</label></td>
                     <td>{{ form.rideTimeSeconds }}
                         {% if form.rideTimeSeconds.errors %}
-                        <span class="error">{{ form.rideTimeSeconds.errors|join:", "}}</span>
+                        <span class="error">{{ form.rideTimeSeconds.errors|join(', ')}}</span>
                         {% endif %}
                     </td>
                 </tr>
@@ -52,7 +52,7 @@
                     <td class="nowrap"><label for="id_averageHr">Average heart rate</label></td>
                     <td>{{ form.averageHr }}
                         {% if form.averageHr.errors %}
-                        <span class="error">{{ form.averageHr.errors|join:", "}}</span>
+                        <span class="error">{{ form.averageHr.errors|join(', ')}}</span>
                         {% endif %}
                     </td>
                 </tr>
@@ -60,7 +60,7 @@
                     <td class="nowrap"><label for="id_maximumHr">Maximum heart rate</label></td>
                     <td>{{ form.maximumHr }}
                         {% if form.maximumHr.errors %}
-                        <span class="error">{{ form.maximumHr.errors|join:", "}}</span>
+                        <span class="error">{{ form.maximumHr.errors|join(', ')}}</span>
                         {% endif %}
                     </td>
                 </tr>
@@ -68,15 +68,15 @@
                     <td class="nowrap"><label for="id_caloriesBurnt">Calories burnt</label></td>
                     <td>{{ form.caloriesBurnt }}
                         {% if form.caloriesBurnt.errors %}
-                        <span class="error">{{ form.caloriesBurnt.errors|join:", "}}</span>
+                        <span class="error">{{ form.caloriesBurnt.errors|join(', ')}}</span>
                         {% endif %}
                     </td>
                 </tr>
                 <tr>
-                    <td class="nowrap"><label for="id_bikeRideType">Ride type</label></td>
+                    <td class="nowrap"><label for="id_rideType">Ride type</label></td>
                     <td>{{ form.rideType }}
-                        {% if form.bikeRideType.errors %}
-                        <span class="error">{{ form.bikeRideType.errors|join:", "}}</span>
+                        {% if form.rideType.errors %}
+                        <span class="error">{{ form.rideType.errors|join(', ')}}</span>
                         {% endif %}
                     </td>
                 </tr>
@@ -84,7 +84,7 @@
                     <td class="nowrap"><label for="id_bike">Bike</label></td>
                     <td>{{ form.bike }}
                         {% if form.bike.errors %}
-                        <span class="error">{{ form.bike.errors|join:", "}}</span>
+                        <span class="error">{{ form.bike.errors|join(', ')}}</span>
                         {% endif %}
                     </td>
                 </tr>
@@ -92,7 +92,7 @@
                     <td class="nowrapTop"><label for="id_journal">Journal entry</label></td>
                     <td>{{ form.journal }}
                         {% if form.journal.errors %}
-                        <span class="error">{{ form.journal.errors|join:", "}}</span>
+                        <span class="error">{{ form.journal.errors|join(', ')}}</span>
                         {% endif %}
                     </td>
                 </tr>

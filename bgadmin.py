@@ -11,21 +11,26 @@ import os
 from google.appengine.api import users
 from google.appengine.ext import ndb
 import webapp2
-from google.appengine.ext.webapp import template
+import jinja2
 from model import BikeType, RideType
 from forms import BikeTypeForm, RideTypeForm
 from bikegears import FourOhFour
 from helpers import makeUserLinks, makeAdminMenu
 
+jinjaEnvironment = jinja2.Environment(
+    loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
+    extensions=['jinja2.ext.autoescape'],
+    autoescape=True)
+
 class MainAdmin(webapp2.RequestHandler):
     """Main admin screen handler"""
     def get(self):
-        path = os.path.join(os.path.dirname(__file__), 'template/adminwelcome.html')
+        template = jinjaEnvironment.get_template('template/adminwelcome.html')
         template_values = makeUserLinks(self.request.uri)
         template_values['menu'] = makeAdminMenu(page='admin')
-        template_values['bikeTypes'] = BikeType.all()
-        template_values['rideTypes'] = RideType.all()
-        self.response.out.write(template.render(path, template_values))
+        template_values['bikeTypes'] = BikeType.query().fetch()
+        template_values['rideTypes'] = RideType.query().fetch()
+        self.response.out.write(template.render(template_values))
 
 class RideTypeEntry(webapp2.RequestHandler):
     """Handler for adding and updating RideType objects"""
@@ -39,11 +44,11 @@ class RideTypeEntry(webapp2.RequestHandler):
             rideType = None
             id = None
             template_values['submitValue'] = 'Create'
-        path = os.path.join(os.path.dirname(__file__), 'template/ridetypeentry.html')
+        template = jinjaEnvironment.get_template('template/ridetypeentry.html')
         template_values['menu'] = makeAdminMenu(page='admin/ridetypeentry')
         template_values['form'] = RideTypeForm(instance=rideType)
         template_values['id'] = id
-        self.response.out.write(template.render(path, template_values))
+        self.response.out.write(template.render(template_values))
     
     def post(self):
         try:
@@ -61,13 +66,13 @@ class RideTypeEntry(webapp2.RequestHandler):
             self.redirect('/admin')
         else:
             # back to form for editing
-            path = os.path.join(os.path.dirname(__file__), 'template/ridetypeentry.html')
+            template = jinjaEnvironment.get_template('template/ridetypeentry.html')
             template_values = makeUserLinks(self.request.uri)
             template_values['menu'] = makeAdminMenu(page='admin/ridetypeentry')
             template_values['submitValue'] = 'Fix'
             template_values['form'] = data
             template_values['id'] = id
-            self.response.out.write(template.render(path, template_values))
+            self.response.out.write(template.render(template_values))
     
 
 class BikeTypeEntry(webapp2.RequestHandler):
@@ -82,11 +87,11 @@ class BikeTypeEntry(webapp2.RequestHandler):
             bikeType = None
             id = None
             template_values['submitValue'] = 'Create'
-        path = os.path.join(os.path.dirname(__file__), 'template/biketypeentry.html')
+        template = jinjaEnvironment.get_template('template/biketypeentry.html')
         template_values['menu'] = makeAdminMenu(page='admin/biketypeentry')
         template_values['form'] = BikeTypeForm(instance=bikeType)
         template_values['id'] = id
-        self.response.out.write(template.render(path, template_values))
+        self.response.out.write(template.render(template_values))
     
     def post(self):
         try:
@@ -104,13 +109,13 @@ class BikeTypeEntry(webapp2.RequestHandler):
             self.redirect('/admin')
         else:
             # back to form for editing
-            path = os.path.join(os.path.dirname(__file__), 'template/biketypeentry.html')
+            template = jinjaEnvironment.get_template('template/biketypeentry.html')
             template_values = makeUserLinks(self.request.uri)
             template_values['menu'] = makeAdminMenu(page='admin/biketypeentry')
             template_values['submitValue'] = 'Fix'
             template_values['form'] = data
             template_values['id'] = id
-            self.response.out.write(template.render(path, template_values))
+            self.response.out.write(template.render(template_values))
 
 
 app = webapp2.WSGIApplication([('/admin', MainAdmin)
