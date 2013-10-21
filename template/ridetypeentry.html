@@ -9,16 +9,16 @@
 			<input name="_id" type="hidden" value="{{id}}">
             <table>
                 <tr>
-                    <td class="nowrap"><label for="id_name">Name</label></td>
-                    <td>{{ form.name }}
+                    <td class="nowrap">{{ form.name.label }}</td>
+                    <td>{{ form.name() }}
                         {% if form.name.errors %}
                         <span class="error">{{ form.name.errors|join(', ')}}</span>
                         {% endif %}
                     </td>
                 </tr>
                 <tr>
-                    <td class="nowrapTop"><label for="id_description">Description</label></td>
-                    <td>{{ form.description }}
+                    <td class="nowrapTop">{{ form.description.label }}</td>
+                    <td>{{ form.description() }}
                         {% if form.description.errors %}
                         <span class="error">{{ form.description.errors|join(', ')}}</span>
                         {% endif %}

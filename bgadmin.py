@@ -12,6 +12,7 @@ from google.appengine.api import users
 from google.appengine.ext import ndb
 import webapp2
 import jinja2
+import logging
 from model import BikeType, RideType
 from forms import BikeTypeForm, RideTypeForm
 from bikegears import FourOhFour
@@ -36,33 +37,37 @@ class RideTypeEntry(webapp2.RequestHandler):
     """Handler for adding and updating RideType objects"""
     def get(self):
         template_values = makeUserLinks(self.request.uri)
+        id = self.request.get('id')
+        
         try:
-            id = int(self.request.get('id'))
-            rideType = RideType.get(db.Key.from_path('RideType', id))
+            rideType = RideType.get_by_id(int(id))
             template_values['submitValue'] = 'Update'
         except ValueError:
-            rideType = None
+            rideType = RideType()
             id = None
             template_values['submitValue'] = 'Create'
+        
         template = jinjaEnvironment.get_template('template/ridetypeentry.html')
         template_values['menu'] = makeAdminMenu(page='admin/ridetypeentry')
-        template_values['form'] = RideTypeForm(instance=rideType)
+        template_values['form'] = RideTypeForm(obj=rideType)
         template_values['id'] = id
         self.response.out.write(template.render(template_values))
     
     def post(self):
-        try:
-            id = int(self.request.get('_id'))
-            rideType = RideType.get(db.Key.from_path('RideType', id))
-        except ValueError:
-            rideType = None
-            id = None
-        data = RideTypeForm(data=self.request.POST, instance=rideType)
+        id = self.request.get('_id')
         
-        if data.is_valid():
+        try:
+            rideType = RideType.get_by_id(int(id))
+        except ValueError:
+            rideType = RideType()
+            id = None
+        
+        form_data = RideTypeForm(self.request.POST, rideType)
+        
+        if form_data.validate():
             # Save and redirect to admin home page
-            entity = data.save(commit=False)
-            entity.put()
+            form_data.populate_obj(rideType)
+            rideType.put()
             self.redirect('/admin')
         else:
             # back to form for editing
@@ -70,7 +75,7 @@ class RideTypeEntry(webapp2.RequestHandler):
             template_values = makeUserLinks(self.request.uri)
             template_values['menu'] = makeAdminMenu(page='admin/ridetypeentry')
             template_values['submitValue'] = 'Fix'
-            template_values['form'] = data
+            template_values['form'] = form_data
             template_values['id'] = id
             self.response.out.write(template.render(template_values))
     
@@ -79,33 +84,36 @@ class BikeTypeEntry(webapp2.RequestHandler):
     """Handler for adding and updating BikeType objects"""
     def get(self):
         template_values = makeUserLinks(self.request.uri)
+        id = self.request.get('id')
+        
         try:
-            id = int(self.request.get('id'))
-            bikeType = BikeType.get(db.Key.from_path('BikeType', id))
+            bikeType = BikeType.get_by_id(int(id))
             template_values['submitValue'] = 'Update'
         except ValueError:
-            bikeType = None
+            bikeType = BikeType()
             id = None
             template_values['submitValue'] = 'Create'
+            
         template = jinjaEnvironment.get_template('template/biketypeentry.html')
         template_values['menu'] = makeAdminMenu(page='admin/biketypeentry')
-        template_values['form'] = BikeTypeForm(instance=bikeType)
+        template_values['form'] = BikeTypeForm(obj=bikeType)
         template_values['id'] = id
         self.response.out.write(template.render(template_values))
     
     def post(self):
+        id = self.request.get('_id')
         try:
-            id = int(self.request.get('_id'))
-            bikeType = BikeType.get(db.Key.from_path('BikeType', id))
+            intId = int(id) # hack to force ValueError
+            bikeType = BikeType.get_by_id(id)
         except ValueError:
-            bikeType = None
+            bikeType = BikeType()
             id = None
-        data = BikeTypeForm(data=self.request.POST, instance=bikeType)
+        form_data = BikeTypeForm(self.request.POST, bikeType)
         
-        if data.is_valid():
+        if form_data.validate():
             # Save and redirect to admin home page
-            entity = data.save(commit=False)
-            entity.put()
+            form_data.populate_obj(bikeType)
+            bikeType.put()
             self.redirect('/admin')
         else:
             # back to form for editing
@@ -113,7 +121,7 @@ class BikeTypeEntry(webapp2.RequestHandler):
             template_values = makeUserLinks(self.request.uri)
             template_values['menu'] = makeAdminMenu(page='admin/biketypeentry')
             template_values['submitValue'] = 'Fix'
-            template_values['form'] = data
+            template_values['form'] = form_data
             template_values['id'] = id
             self.response.out.write(template.render(template_values))
 

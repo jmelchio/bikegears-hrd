@@ -17,10 +17,11 @@
 		<th width="20%"></th>
     </tr>
     {% for bikeType in bikeTypes %}
+	{% set bikeTypeId = bikeType.key.id() %}
     <tr class="{{ loop.cycle('even', 'odd') }}">
         <td>{{bikeType.name}}</td>
         <td>{{bikeType.description}}</td>
-        <td><a href="/admin/biketypeentry?id={{bikeType.key.id}}">update</a>&nbsp;<a href="/admin/biketypedelete?id={{bikeType.key.id}}">delete</a></td>
+        <td><a href="/admin/biketypeentry?id={{bikeTypeId}}">update</a>&nbsp;<a href="/admin/biketypedelete?id={{bikeTypeId}}">delete</a></td>
     </tr>
     {% endfor %}
 </table>
@@ -38,10 +39,11 @@
 		<th width="20%"></th>
     </tr>
     {% for rideType in rideTypes %}
+	{% set rideTypeId = rideType.key.id() %}
     <tr class="{{ loop.cycle('even', 'odd') }}">
         <td>{{rideType.name}}</td>
         <td>{{rideType.description}}</td>
-        <td><a href="/admin/ridetypeentry?id={{rideType.key.id}}">update</a>&nbsp;<a href="/admin/ridetypedelete?id={{rideType.key.id}}">delete</a></td>
+        <td><a href="/admin/ridetypeentry?id={{rideTypeId}}">update</a>&nbsp;<a href="/admin/ridetypedelete?id={{rideTypeId}}">delete</a></td>
     </tr>
     {% endfor %}
 </table>
