@@ -103,8 +103,7 @@ class BikeTypeEntry(webapp2.RequestHandler):
     def post(self):
         id = self.request.get('_id')
         try:
-            intId = int(id) # hack to force ValueError
-            bikeType = BikeType.get_by_id(id)
+            bikeType = BikeType.get_by_id(int(id))
         except ValueError:
             bikeType = BikeType()
             id = None

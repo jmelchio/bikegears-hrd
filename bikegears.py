@@ -62,35 +62,41 @@ class BikeEntry(webapp2.RequestHandler):
     """
     def get(self):
         template_values = makeUserLinks(self.request.uri)
+        id = self.request.get('id')
         try:
-            id = int(self.request.get('id'))
-            bike = Key(Bike, id).get()
+            bike = Bike.get_by_id(int(id))
             template_values['submitValue'] = 'Update'
         except ValueError:
             id = None
-            bike = None
+            bike = Bike()
             template_values['submitValue'] = 'Create'
         
         template = jinjaEnvironment.get_template('template/bikeentry.html')
         template_values['menu'] = makeMenu(page='user/bikeentry')
-        template_values['form'] = BikeForm(instance=bike)
+        bikeForm = BikeForm(obj=bike)
+        bikeForm.bikeType.choices = [(bikeType.key.urlsafe(), bikeType.name) for bikeType in BikeType.query().fetch()]
+        template_values['form'] = bikeForm
         template_values['id'] = id
         self.response.out.write(template.render(template_values))
     
     def post(self):
+        id = self.request.get('_id')
         try:
-            id = int(self.request.get('_id'))
-            bike = Key(Bike, id).get()
+            bike = Bike.get_by_id(int(id))
         except ValueError:
-            bike = None
+            bike = Bike()
             id = None
-        data = BikeForm(data=self.request.POST, instance=bike)
+            
+        form_data = BikeForm(self.request.POST, bike)
+        form_data.bikeType.choices = [(bikeType.key.urlsafe(), bikeType.name) for bikeType in BikeType.query().fetch()]
+        logging.info('%s' % form_data.bikeType.data)
         
-        if data.is_valid():
+        if form_data.validate():
             # Save and redirect to admin home page
-            entity = data.save(commit=False)
-            entity.bikeRider = users.get_current_user()
-            entity.put()
+            form_data.bikeType.data = ndb.Key(urlsafe=form_data.bikeType.data) # translate urlsafe key string to actual key
+            form_data.populate_obj(bike)
+            bike.bikeRider = users.get_current_user()
+            bike.put()
             self.redirect('/user/bikeoverview')
         else:
             # back to form for editing
@@ -98,7 +104,7 @@ class BikeEntry(webapp2.RequestHandler):
             template_values = makeUserLinks(self.request.uri)
             template_values['menu'] = makeMenu(page='user/bikeentry')
             template_values['submitValue'] = 'Fix'
-            template_values['form'] = data
+            template_values['form'] = form_data
             template_values['id'] = id
             self.response.out.write(template.render(template_values))
     
@@ -115,7 +121,7 @@ class RideEntry(webapp2.RequestHandler):
             template_values['form'] = BikeRideForm(instance=bikeRide)
         except ValueError:
             id = None
-            bikeRide = None
+            bikeRide = BikeRide()
             template_values['submitValue'] = 'Create'
             template_values['form'] = BikeRideForm(initial={'date':date.today().isoformat()})
         
@@ -131,12 +137,13 @@ class RideEntry(webapp2.RequestHandler):
         except ValueError:
             bikeRide = None
             id = None
-        data = BikeRideForm(data=self.request.POST, instance=bikeRide)
-        logging.info("data from bikeride form is: %s", data)
+            
+        form_data = BikeRideForm(data=self.request.POST, instance=bikeRide)
+        logging.info("data from bikeride form is: %s", form_data)
         logging.info("data from the bikeride request is: %s", self.request)
         
         if data.is_valid():
-            entity = data.save(commit=False)
+            entity = form_data.save(commit=False)
             entity.bikeRider = users.get_current_user()
             entity.put()
             self.redirect('/user/rideroverview')
