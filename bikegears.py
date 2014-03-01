@@ -12,7 +12,7 @@ import jinja2
 import logging
 from google.appengine.api import users
 from google.appengine.ext import ndb
-from model import Bike, BikeRide, BikeType
+from model import Bike, BikeRide, BikeType, RideType
 from forms import BikeForm, BikeRideForm
 from helpers import makeMenu, makeUserLinks
 from datetime import date
@@ -116,15 +116,17 @@ class RideEntry(webapp2.RequestHandler):
         template_values = makeUserLinks(self.request.uri)
         try:
             id = int(self.request.get('id'))
-            bikeRide = Key(BikeRide, id).get()
+            bikeRide = BikeRide.get_by_id(id)
             template_values['submitValue'] = 'Update'
-            template_values['form'] = BikeRideForm(instance=bikeRide)
         except ValueError:
             id = None
             bikeRide = BikeRide()
             template_values['submitValue'] = 'Create'
-            template_values['form'] = BikeRideForm(initial={'date':date.today().isoformat()})
         
+        bikeRideForm = BikeRideForm(obj=bikeRide)
+        bikeRideForm.bike.choices = [(bike.key.urlsafe(), bike.brand) for bike in Bike.query().fetch()]
+        bikeRideForm.rideType.choices = [(rideType.key.urlsafe(), rideType.name) for rideType in RideType.query().fetch()]
+        template_values['form'] = bikeRideForm
         template = jinjaEnvironment.get_template('template/rideentry.html')
         template_values['menu'] = makeMenu(page='user/rideentry')
         template_values['id'] = id
@@ -135,24 +137,28 @@ class RideEntry(webapp2.RequestHandler):
             id = int(self.request.get('_id'))
             bikeRide = Key(BikeRide, id).get()
         except ValueError:
-            bikeRide = None
+            bikeRide = BikeRide()
             id = None
             
-        form_data = BikeRideForm(data=self.request.POST, instance=bikeRide)
+        form_data = BikeRideForm(self.request.POST, bikeRide)
+        form_data.bike.choices = [(bike.key.urlsafe(), bike.brand) for bike in Bike.query().fetch()]
+        form_data.rideType.choices = [(rideType.key.urlsafe(), rideType.name) for rideType in RideType.query().fetch()]
         logging.info("data from bikeride form is: %s", form_data)
         logging.info("data from the bikeride request is: %s", self.request)
         
-        if data.is_valid():
-            entity = form_data.save(commit=False)
-            entity.bikeRider = users.get_current_user()
-            entity.put()
+        if form_data.validate():
+            form_data.bike.data = ndb.Key(urlsafe=form_data.bike.data)
+            form_data.rideType.data = ndb.Key(urlsafe=form_data.rideType.data)
+            form_data.populate_obj(bikeRide)
+            bikeRide.bikeRider = users.get_current_user()
+            bikeRide.put()
             self.redirect('/user/rideroverview')
         else:
             template = jinjaEnvironment.get_template('template/rideentry.html')
             template_values = makeUserLinks(self.request.uri)
             template_values['menu'] = makeMenu(page='user/rideentry')
             template_values['submitValue'] = 'Fix'
-            template_values['form'] = data
+            template_values['form'] = form_data
             template_values['id'] = id
             self.response.out.write(template.render(template_values))
     

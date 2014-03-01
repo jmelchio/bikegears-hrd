@@ -9,7 +9,7 @@ Copyright (c) 2008 Melchior I.T. Inc.. All rights reserved.
 
 from model import Bike, BikeRide, BikeType, RideType
 from google.appengine.api import users
-from wtforms import Form, StringField, TextAreaField, IntegerField, SelectField, DateField, DecimalField, validators
+from wtforms import Form, StringField, TextAreaField, IntegerField, SelectField, DateField, DecimalField, FloatField, validators
 
 class BikeForm(Form):
     """docstring for BikeForm"""
@@ -25,12 +25,12 @@ class BikeRideForm(Form):
     date = DateField(u'Ride date', validators=[validators.input_required()])
     startLocation = StringField(u'Start location')
     finishLocation = StringField(u'Finish location')
-    distanceKm = DecimalField(u'Distance', validators=[validators.input_required()])
+    distanceKm = FloatField(u'Distance', validators=[validators.input_required()])
     rideTimeSeconds = IntegerField(u'Ride Time (secs)')
     averageHr = IntegerField(u'Average HR')
     maximumHr = IntegerField(u'Maximum HR')
     caloriesBurnt = IntegerField(u'Calories burnt')
-    journal = StringField(u'Journal')
+    journal = TextAreaField(u'Journal')
     rideType = SelectField(u'Ride Type')
     bike = SelectField(u'Bike')
 
