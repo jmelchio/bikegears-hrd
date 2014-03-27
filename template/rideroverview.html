@@ -18,14 +18,19 @@
         <th></th>
     </tr>
     {% for ride in rides %}
+	{% set rideId = ride.key.id() %}
+	{% set rideBike = ride.bike.get() %}
+	{% set rideTime = ride.getRideTimeAsString() %}
+	{% set rideAvg = ride.getAverageSpeed() %}
+	{% set rideType = ride.rideType.get() %}
     <tr class="{{ loop.cycle('even', 'odd') }}">
         <td class="date">{{ride.date}}</td>
         <td class="number">{{ride.distanceKm|round(precision=2)}}</td>
-        <td class="date">{{ride.getRideTimeAsString}}</td>
-        <td class="number">{{ride.getAverageSpeed}}</td>
-        <td>{{ride.rideType.name}}</td>
-        <td>{{ride.bike.brand}} {{ride.bike.model}}</td>
-        <td><a href="/user/rideentry?id={{ride.key.id}}">update</a>&nbsp;<a href="/user/ridedelete?id={{ride.key.id}}">delete</a></td>
+        <td class="date">{{rideTime}}</td>
+        <td class="number">{{rideAvg}}</td>
+        <td>{{rideType.name}}</td>
+        <td>{{rideBike.brand}} {{rideBike.model}}</td>
+        <td><a href="/user/rideentry?id={{rideId}}">update</a>&nbsp;<a href="/user/ridedelete?id={{rideId}}">delete</a></td>
     </tr>
     {% endfor %}
 </table>
