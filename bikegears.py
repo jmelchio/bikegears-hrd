@@ -61,24 +61,36 @@ class BikeEntry(webapp2.RequestHandler):
        to the key is updated, otherwise a new record is inserted in the table.
     """
     def get(self):
+        errorList = [];
+        curUser = users.get_current_user();
         template_values = makeUserLinks(self.request.uri)
         id = self.request.get('id')
         try:
             bike = Bike.get_by_id(int(id))
             template_values['submitValue'] = 'Update'
+            try:
+                if bike.bikeRider != curUser:
+                    errorList.append('Attempt to edit bike not owned by user')
+            except AttributeError:
+                errorList.append('Bike not found')
         except ValueError:
             id = None
             bike = Bike()
             template_values['submitValue'] = 'Create'
         
-        template = jinjaEnvironment.get_template('template/bikeentry.html')
-        template_values['menu'] = makeMenu(page='user/bikeentry')
-        bikeForm = BikeForm(obj=bike)
-        bikeForm.bikeType.choices = [(bikeType.key.urlsafe(), bikeType.name) for bikeType in BikeType.query().fetch()]
-        bikeForm.bikeType.data = (bike.bikeType.urlsafe() if bike.bikeType else 0)
-        template_values['form'] = bikeForm
-        template_values['id'] = id
-        self.response.out.write(template.render(template_values))
+        if len(errorList) > 0:
+            logging.info('%s' % errorList)
+            self.redirect('user/errorPage')
+        else:
+            template = jinjaEnvironment.get_template('template/bikeentry.html')
+            template_values['menu'] = makeMenu(page='user/bikeentry')
+            bikeForm = BikeForm(obj=bike)
+            bikeForm.bikeType.choices = [(bikeType.key.urlsafe(), bikeType.name) for bikeType in BikeType.query().fetch()]
+            bikeForm.bikeType.data = (bike.bikeType.urlsafe() if bike.bikeType else 0)
+            template_values['form'] = bikeForm
+            template_values['id'] = id
+            self.response.out.write(template.render(template_values))
+        
     
     def post(self):
         id = self.request.get('_id')
@@ -114,26 +126,37 @@ class BikeEntry(webapp2.RequestHandler):
 class RideEntry(webapp2.RequestHandler):
     """handler for entry of the bike rides both get and post actions"""
     def get(self):
+        curUser = users.get_current_user();
         template_values = makeUserLinks(self.request.uri)
+        errorList = []
+        id = self.request.get('id')
         try:
-            id = int(self.request.get('id'))
-            bikeRide = BikeRide.get_by_id(id)
+            bikeRide = BikeRide.get_by_id(int(id))
             template_values['submitValue'] = 'Update'
+            try:
+                if bikeRide.bikeRider != curUser:
+                    errorList.append('Attempt to edit bikeRide not owned by user')
+            except AttributeError:
+                errorList.append('bikeRide not found')
         except ValueError:
             id = None
             bikeRide = BikeRide()
             template_values['submitValue'] = 'Create'
         
-        bikeRideForm = BikeRideForm(obj=bikeRide)
-        bikeRideForm.bike.choices = [(bike.key.urlsafe(), bike.brand + ' ' + bike.model) for bike in Bike.query().fetch()]
-        bikeRideForm.bike.data = (bikeRide.bike.urlsafe() if bikeRide.bike else 0)
-        bikeRideForm.rideType.choices = [(rideType.key.urlsafe(), rideType.name) for rideType in RideType.query().fetch()]
-        bikeRideForm.rideType.data = (bikeRide.rideType.urlsafe() if bikeRide.rideType else 0)
-        template_values['form'] = bikeRideForm
-        template = jinjaEnvironment.get_template('template/rideentry.html')
-        template_values['menu'] = makeMenu(page='user/rideentry')
-        template_values['id'] = id
-        self.response.out.write(template.render(template_values))
+        if len(errorList) > 0:
+            logging.info('%s' % errorList)
+            self.redirect('/user/errorPage')
+        else:
+            bikeRideForm = BikeRideForm(obj=bikeRide)
+            bikeRideForm.bike.choices = [(bike.key.urlsafe(), bike.brand + ' ' + bike.model) for bike in Bike.query(Bike.bikeRider==curUser).fetch()]
+            bikeRideForm.bike.data = (bikeRide.bike.urlsafe() if bikeRide.bike else 0)
+            bikeRideForm.rideType.choices = [(rideType.key.urlsafe(), rideType.name) for rideType in RideType.query().fetch()]
+            bikeRideForm.rideType.data = (bikeRide.rideType.urlsafe() if bikeRide.rideType else 0)
+            template_values['form'] = bikeRideForm
+            template = jinjaEnvironment.get_template('template/rideentry.html')
+            template_values['menu'] = makeMenu(page='user/rideentry')
+            template_values['id'] = id
+            self.response.out.write(template.render(template_values))
     
     def post(self):
         try:
