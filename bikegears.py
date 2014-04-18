@@ -75,7 +75,7 @@ class BikeEntry(webapp2.RequestHandler):
         template_values['menu'] = makeMenu(page='user/bikeentry')
         bikeForm = BikeForm(obj=bike)
         bikeForm.bikeType.choices = [(bikeType.key.urlsafe(), bikeType.name) for bikeType in BikeType.query().fetch()]
-        bikeForm.bikeType.data = bike.bikeType.urlsafe()
+        bikeForm.bikeType.data = (bike.bikeType.urlsafe() if bike.bikeType else 0)
         template_values['form'] = bikeForm
         template_values['id'] = id
         self.response.out.write(template.render(template_values))
@@ -126,9 +126,9 @@ class RideEntry(webapp2.RequestHandler):
         
         bikeRideForm = BikeRideForm(obj=bikeRide)
         bikeRideForm.bike.choices = [(bike.key.urlsafe(), bike.brand + ' ' + bike.model) for bike in Bike.query().fetch()]
-        bikeRideForm.bike.data = bikeRide.bike.urlsafe()
+        bikeRideForm.bike.data = (bikeRide.bike.urlsafe() if bikeRide.bike else 0)
         bikeRideForm.rideType.choices = [(rideType.key.urlsafe(), rideType.name) for rideType in RideType.query().fetch()]
-        bikeRideForm.rideType.data = bikeRide.rideType.urlsafe()
+        bikeRideForm.rideType.data = (bikeRide.rideType.urlsafe() if bikeRide.rideType else 0)
         template_values['form'] = bikeRideForm
         template = jinjaEnvironment.get_template('template/rideentry.html')
         template_values['menu'] = makeMenu(page='user/rideentry')
