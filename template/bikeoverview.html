@@ -20,12 +20,13 @@
     <tbody>
         {% for bike in bikes %}
 		{% set bikeId = bike.key.id() %}
+		{% set bikeType = bike.bikeType.get() %}
         <tr class="{{ loop.cycle('even', 'odd') }}">
             <td class="nowrap">{{bike.brand}}</td>
             <td class="nowrap">{{bike.model}}</td>
             <td>{{bike.year}}</td>
             <td>{{bike.color}}</td>
-            <td class="nowrap">{{bike.bikeType.name}}</td>
+            <td class="nowrap">{{bikeType.name}}</td>
             <td>{{bike.description}}</td>
             <td><a href="/user/bikeentry?id={{bikeId}}">update</a>&nbsp;<a href="/user/bikedelete?id={{bikeId}}">delete</a></td>
         </tr>
