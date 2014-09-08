@@ -16,7 +16,7 @@ import logging
 from model import BikeType, RideType
 from forms import BikeTypeForm, RideTypeForm
 from bikegears import FourOhFour
-from helpers import makeUserLinks, makeAdminMenu
+from helpers import make_user_links, make_admin_menu
 
 jinjaEnvironment = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
@@ -28,8 +28,8 @@ class MainAdmin(webapp2.RequestHandler):
     """Main admin screen handler"""
     def get(self):
         template = jinjaEnvironment.get_template('template/adminwelcome.html')
-        template_values = makeUserLinks(self.request.uri)
-        template_values['menu'] = makeAdminMenu(page='admin')
+        template_values = make_user_links(self.request.uri)
+        template_values['menu'] = make_admin_menu(page='admin')
         template_values['bikeTypes'] = BikeType.query().fetch()
         template_values['rideTypes'] = RideType.query().fetch()
         self.response.out.write(template.render(template_values))
@@ -38,7 +38,7 @@ class MainAdmin(webapp2.RequestHandler):
 class RideTypeEntry(webapp2.RequestHandler):
     """Handler for adding and updating RideType objects"""
     def get(self):
-        template_values = makeUserLinks(self.request.uri)
+        template_values = make_user_links(self.request.uri)
         id = self.request.get('id')
         
         try:
@@ -50,7 +50,7 @@ class RideTypeEntry(webapp2.RequestHandler):
             template_values['submitValue'] = 'Create'
         
         template = jinjaEnvironment.get_template('template/ridetypeentry.html')
-        template_values['menu'] = makeAdminMenu(page='admin/ridetypeentry')
+        template_values['menu'] = make_admin_menu(page='admin/ridetypeentry')
         template_values['form'] = RideTypeForm(obj=ride_type)
         template_values['id'] = id
         self.response.out.write(template.render(template_values))
@@ -74,8 +74,8 @@ class RideTypeEntry(webapp2.RequestHandler):
         else:
             # back to form for editing
             template = jinjaEnvironment.get_template('template/ridetypeentry.html')
-            template_values = makeUserLinks(self.request.uri)
-            template_values['menu'] = makeAdminMenu(page='admin/ridetypeentry')
+            template_values = make_user_links(self.request.uri)
+            template_values['menu'] = make_admin_menu(page='admin/ridetypeentry')
             template_values['submitValue'] = 'Fix'
             template_values['form'] = form_data
             template_values['id'] = id
@@ -85,7 +85,7 @@ class RideTypeEntry(webapp2.RequestHandler):
 class BikeTypeEntry(webapp2.RequestHandler):
     """Handler for adding and updating BikeType objects"""
     def get(self):
-        template_values = makeUserLinks(self.request.uri)
+        template_values = make_user_links(self.request.uri)
         id = self.request.get('id')
         
         try:
@@ -97,7 +97,7 @@ class BikeTypeEntry(webapp2.RequestHandler):
             template_values['submitValue'] = 'Create'
             
         template = jinjaEnvironment.get_template('template/biketypeentry.html')
-        template_values['menu'] = makeAdminMenu(page='admin/biketypeentry')
+        template_values['menu'] = make_admin_menu(page='admin/biketypeentry')
         template_values['form'] = BikeTypeForm(obj=bike_type)
         template_values['id'] = id
         self.response.out.write(template.render(template_values))
@@ -119,8 +119,8 @@ class BikeTypeEntry(webapp2.RequestHandler):
         else:
             # back to form for editing
             template = jinjaEnvironment.get_template('template/biketypeentry.html')
-            template_values = makeUserLinks(self.request.uri)
-            template_values['menu'] = makeAdminMenu(page='admin/biketypeentry')
+            template_values = make_user_links(self.request.uri)
+            template_values['menu'] = make_admin_menu(page='admin/biketypeentry')
             template_values['submitValue'] = 'Fix'
             template_values['form'] = form_data
             template_values['id'] = id

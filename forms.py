@@ -7,9 +7,8 @@ Created by Joris Melchior on 2008-06-13.
 Copyright (c) 2008 Melchior I.T. Inc.. All rights reserved.
 """
 
-from model import Bike, BikeRide, BikeType, RideType
-from google.appengine.api import users
-from wtforms import Form, StringField, TextAreaField, IntegerField, SelectField, DateField, DecimalField, FloatField, validators
+from wtforms import Form, StringField, TextAreaField, IntegerField, SelectField, DateField, FloatField, validators
+
 
 class BikeForm(Form):
     """docstring for BikeForm"""
@@ -19,6 +18,7 @@ class BikeForm(Form):
     year = IntegerField(u'Year')
     bikeType = SelectField(u'Bike type')
     description = TextAreaField(u'Description')
+
 
 class BikeRideForm(Form):
     """docstring for BikeRideForm"""
@@ -33,6 +33,7 @@ class BikeRideForm(Form):
     journal = TextAreaField(u'Journal')
     rideType = SelectField(u'Ride Type')
     bike = SelectField(u'Bike')
+
 
 class BikeTypeForm(Form):
     """docstring for BikeTypeForm"""

@@ -9,6 +9,7 @@ Copyright (c) 2008 Melchior I.T. Inc.. All rights reserved.
 from datetime import time
 from google.appengine.ext import ndb
 
+
 class BikeType(ndb.Model):
     """docstring for BikeType"""
     name = ndb.StringProperty(required=True)
@@ -30,6 +31,7 @@ class Bike(ndb.Model):
     
     def __str__(self):
         return '%s %s' % (self.brand, self.model)
+
 
 class RideType(ndb.Model):
     """docstring for RideType"""
@@ -58,17 +60,17 @@ class BikeRide(ndb.Model):
     def __str__(self):
         return '%s %s' % (self.date, self.distanceKm)
     
-    def getRideTime(self):
-        if(self.rideTimeSeconds == None):
+    def get_ride_time(self):
+        if self.rideTimeSeconds == None:
             return time(hour=0, minute=0, second=0).isoformat()
         
         hour = 0
-        minute = 0
-        second = 0
-        if(self.rideTimeSeconds >= 3600):
+        # minute = 0
+        # second = 0
+        if self.rideTimeSeconds >= 3600:
             hour = self.rideTimeSeconds / 3600
             remainder = self.rideTimeSeconds % 3600
-            if(remainder == 0):
+            if remainder == 0:
                 minute = remainder
                 second = remainder
             else:
@@ -80,11 +82,11 @@ class BikeRide(ndb.Model):
         
         return time(hour, minute, second)
     
-    def getRideTimeAsString(self):
-        return self.getRideTime().isoformat()
+    def get_ride_time_as_string(self):
+        return self.get_ride_time().isoformat()
     
-    def getAverageSpeed(self):
-        if(self.rideTimeSeconds and self.distanceKm):
+    def get_average_speed(self):
+        if self.rideTimeSeconds and self.distanceKm:
             return '%.2f' % ((self.distanceKm / self.rideTimeSeconds) * 3600)
         else:
             return 'NA'

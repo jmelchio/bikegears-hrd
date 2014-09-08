@@ -20,8 +20,8 @@
     {% for ride in rides %}
 	{% set rideId = ride.key.id() %}
 	{% set rideBike = ride.bike.get() %}
-	{% set rideTime = ride.getRideTimeAsString() %}
-	{% set rideAvg = ride.getAverageSpeed() %}
+	{% set rideTime = ride.get_ride_time_as_string() %}
+	{% set rideAvg = ride.get_average_speed() %}
 	{% set rideType = ride.rideType.get() %}
     <tr class="{{ loop.cycle('even', 'odd') }}">
         <td class="date">{{ride.date}}</td>
