@@ -23,6 +23,7 @@ jinjaEnvironment = jinja2.Environment(
     extensions=['jinja2.ext.autoescape'],
     autoescape=True)
 
+
 class MainAdmin(webapp2.RequestHandler):
     """Main admin screen handler"""
     def get(self):
@@ -33,6 +34,7 @@ class MainAdmin(webapp2.RequestHandler):
         template_values['rideTypes'] = RideType.query().fetch()
         self.response.out.write(template.render(template_values))
 
+
 class RideTypeEntry(webapp2.RequestHandler):
     """Handler for adding and updating RideType objects"""
     def get(self):
@@ -40,16 +42,16 @@ class RideTypeEntry(webapp2.RequestHandler):
         id = self.request.get('id')
         
         try:
-            rideType = RideType.get_by_id(int(id))
+            ride_type = RideType.get_by_id(int(id))
             template_values['submitValue'] = 'Update'
         except ValueError:
-            rideType = RideType()
+            ride_type = RideType()
             id = None
             template_values['submitValue'] = 'Create'
         
         template = jinjaEnvironment.get_template('template/ridetypeentry.html')
         template_values['menu'] = makeAdminMenu(page='admin/ridetypeentry')
-        template_values['form'] = RideTypeForm(obj=rideType)
+        template_values['form'] = RideTypeForm(obj=ride_type)
         template_values['id'] = id
         self.response.out.write(template.render(template_values))
     
@@ -57,17 +59,17 @@ class RideTypeEntry(webapp2.RequestHandler):
         id = self.request.get('_id')
         
         try:
-            rideType = RideType.get_by_id(int(id))
+            ride_type = RideType.get_by_id(int(id))
         except ValueError:
-            rideType = RideType()
+            ride_type = RideType()
             id = None
         
-        form_data = RideTypeForm(self.request.POST, rideType)
+        form_data = RideTypeForm(self.request.POST, ride_type)
         
         if form_data.validate():
             # Save and redirect to admin home page
-            form_data.populate_obj(rideType)
-            rideType.put()
+            form_data.populate_obj(ride_type)
+            ride_type.put()
             self.redirect('/admin')
         else:
             # back to form for editing
@@ -87,32 +89,32 @@ class BikeTypeEntry(webapp2.RequestHandler):
         id = self.request.get('id')
         
         try:
-            bikeType = BikeType.get_by_id(int(id))
+            bike_type = BikeType.get_by_id(int(id))
             template_values['submitValue'] = 'Update'
         except ValueError:
-            bikeType = BikeType()
+            bike_type = BikeType()
             id = None
             template_values['submitValue'] = 'Create'
             
         template = jinjaEnvironment.get_template('template/biketypeentry.html')
         template_values['menu'] = makeAdminMenu(page='admin/biketypeentry')
-        template_values['form'] = BikeTypeForm(obj=bikeType)
+        template_values['form'] = BikeTypeForm(obj=bike_type)
         template_values['id'] = id
         self.response.out.write(template.render(template_values))
     
     def post(self):
         id = self.request.get('_id')
         try:
-            bikeType = BikeType.get_by_id(int(id))
+            bike_type = BikeType.get_by_id(int(id))
         except ValueError:
-            bikeType = BikeType()
+            bike_type = BikeType()
             id = None
-        form_data = BikeTypeForm(self.request.POST, bikeType)
+        form_data = BikeTypeForm(self.request.POST, bike_type)
         
         if form_data.validate():
             # Save and redirect to admin home page
-            form_data.populate_obj(bikeType)
-            bikeType.put()
+            form_data.populate_obj(bike_type)
+            bike_type.put()
             self.redirect('/admin')
         else:
             # back to form for editing
