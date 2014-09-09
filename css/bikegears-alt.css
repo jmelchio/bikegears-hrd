@@ -7,6 +7,7 @@
 */
 body { 
     background: #fde7a8 url(../images/backgroundfade.png) repeat-x;
+	/* color: #696969; */
     font-size: small;
     font-family: verdana, sans-serif;
     padding: 0 0 0 0;
@@ -14,11 +15,11 @@ body {
 }
 
 img { 
-    border: 0px; 
+    border: 0;
 }
 
 div { 
-    border: dashed 0px orange;
+    border: dashed 0 orange;
 }
 
 h2 { 
@@ -31,7 +32,7 @@ p {
 }
 
 fieldset { 
-    border: solid 0px rgb(130, 130, 130);
+    border: solid 0 rgb(130, 130, 130);
 }
 
 input[type|="text"]:focus { 
@@ -61,8 +62,8 @@ div#container {
 
 div#header { 
     width: 100%;
-    padding: 0.2em 0 0.s1em 0;
-    border: 1px solid #99CCFF;
+    padding: 0.2em 0 0.1em 0;
+    border: solid #99CCFF;
     border-width: 0 0 1px 0;
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
@@ -92,7 +93,7 @@ div#menu {
 	float: left;
 	width: 12em;
     margin: 1em ;
-    padding: 0em;
+    padding: 0;
     border: 1px solid #99CCFF;
     border-radius: 10px;
 }
@@ -105,7 +106,7 @@ div#menu {
 
 div#content { 
     margin: 1em 1em 1em 14em;
-    padding: 0em;
+    padding: 0;
     width: auto;
 }
 
@@ -124,8 +125,8 @@ div#footer {
     clear: both;
     text-align: center;
     margin: 1em 0 0.75em 0;
-    padding: 0.25em 0em 0.25em 0em;
-    border: 1px solid #99CCFF;
+    padding: 0.25em 0 0.25em 0;
+    border: solid #99CCFF;
     border-width: 1px 0 0 0;
 }
 
@@ -148,10 +149,8 @@ div#footer {
     text-decoration: none;
     font-weight: bold;
     color: #0d5dc1;
-    border-color: rgb(130, 130, 130);
-    border-style: solid;
     border-collapse: collapse;
-    border-width: 0px;
+    border: 0 solid rgb(130, 130, 130);
     border-radius: 8px;
 }
 
@@ -165,7 +164,7 @@ div#footer {
 }
 
 #menu a:last-child {
-    border-width: 0px;
+    border-width: 0;
 }
 
 #menu p {
@@ -176,10 +175,8 @@ div#footer {
     font-weight: bold;
     color: white;
     background: #99CCFF url(../images/sprockets-scaled-fade-blue.gif) -100px -100px no-repeat fixed;
-    border-color: rgb(130, 130, 130);
-    border-style: solid;
     border-collapse: collapse;
-    border-width: 0px;
+    border: 0 solid rgb(130, 130, 130);
 }
 
 p.error { 
@@ -192,8 +189,7 @@ table {
 }
 
 fieldset table {
-    border-width: 0px; 
-    border-style: dotted;
+    border: 0 dotted;
 }
 
 table.tabular {
@@ -208,7 +204,7 @@ th {
     vertical-align: top;
     text-align: left;
     background-color: rgb(255, 255, 255);
-    border-width: 1px 0px 1px 0px;
+    border-width: 1px 0 1px 0;
     border-color: rgb(130, 130, 130);
     border-style: solid;
 }
@@ -237,11 +233,11 @@ th.nowrapTop {
 }
 
 th:first-child {
-    border-width: 1px 0px 1px 1px;
+    border-width: 1px 0 1px 1px;
 }
 
 th:last-child {
-    border-width: 1px 1px 1px 0px;
+    border-width: 1px 1px 1px 0;
 }
 
 tr.odd {
@@ -255,17 +251,16 @@ tr.even {
 td { 
     padding: 1px 5px 1px 5px;
     vertical-align: baseline;
-    border-width: 0px 0px 1px 0px;
-    border-color: rgb(130, 130, 130);
-    border-style: solid;
+    border: 0 solid rgb(130, 130, 130);
+    border-bottom-width: 1px;
 }
 
 td:last-child {
-    border-width: 0px 1px 1px 0px;
+    border-width: 0 1px 1px 0;
 }
 
 td:first-child {
-    border-width: 0px 0px 1px 1px;
+    border-width: 0 0 1px 1px;
 }
 
 td.date { 
@@ -292,15 +287,15 @@ td.nowrapTop {
 }
 
 fieldset table tr td {
-    border-width: 0px;
+    border-width: 0;
 }
 
 fieldset table tr td:last-child {
-    border-width: 0px 0px 0px 0px;
+    border-width: 0;
 }
 
 fieldset table tr td:first-child {
-    border-width: 0px 0px 0px 0px;
+    border-width: 0;
 }
 
 .error {

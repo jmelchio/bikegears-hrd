@@ -8,27 +8,27 @@ Copyright (c) 2008 Melchior I.T. Inc.. All rights reserved.
 """
 
 import os
-import wsgiref.handlers
-from google.appengine.ext import webapp
-from google.appengine.ext.webapp import template
-from helpers import makeMenu, makeUserLinks
+import webapp2
+import jinja2
+from helpers import make_menu, make_user_links
 from bikegears import FourOhFour
 
-class Welcome(webapp.RequestHandler):
+jinjaEnvironment = jinja2.Environment(
+    loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
+    extensions=['jinja2.ext.autoescape'],
+    autoescape=True)
+
+class Welcome(webapp2.RequestHandler):
     """Main welcome page handler for the application"""
     def get(self):
-        path = os.path.join(os.path.dirname(__file__), 'template/welcome.html')
-        template_values = makeUserLinks(self.request.uri)
-        template_values['menu'] = makeMenu('')
-        self.response.out.write(template.render(path, template_values))
-
-def main():
-    application = webapp.WSGIApplication([('/', Welcome)
-                                        , ('/.*', FourOhFour)]
-                                        , debug=True)
-    wsgiref.handlers.CGIHandler().run(application)
+        template = jinjaEnvironment.get_template('template/welcome.html')
+        template_values = make_user_links(self.request.uri)
+        template_values['menu'] = make_menu('')
+        self.response.out.write(template.render(template_values))
 
 
-if __name__ == '__main__':
-	main()
+app = webapp2.WSGIApplication([('/', Welcome)
+                             , ('/.*', FourOhFour)]
+                             , debug=True)
 
+# That's All Folks!

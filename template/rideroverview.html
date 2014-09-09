@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "template/base.html" %}
 {% block title %}BikeGears - Rider Overview{% endblock %}
 {% block content %}
 <h2>Rider overview</h2>
@@ -18,14 +18,19 @@
         <th></th>
     </tr>
     {% for ride in rides %}
-    <tr class="{% cycle even,odd %}">
-        <td class="date">{{ride.date|date:"N d, Y"}}</td>
-        <td class="number">{{ride.distanceKm|floatformat:2}}</td>
-        <td class="date">{{ride.getRideTimeAsString}}</td>
-        <td class="number">{{ride.getAverageSpeed}}</td>
-        <td>{{ride.rideType.name}}</td>
-        <td>{{ride.bike.brand}} {{ride.bike.model}}</td>
-        <td><a href="/user/rideentry?id={{ride.key.id}}">update</a>&nbsp;<a href="/user/ridedelete?id={{ride.key.id}}">delete</a></td>
+	{% set rideId = ride.key.id() %}
+	{% set rideBike = ride.bike.get() %}
+	{% set rideTime = ride.get_ride_time_as_string() %}
+	{% set rideAvg = ride.get_average_speed() %}
+	{% set rideType = ride.rideType.get() %}
+    <tr class="{{ loop.cycle('even', 'odd') }}">
+        <td class="date">{{ride.date}}</td>
+        <td class="number">{{ride.distanceKm|round(precision=2)}}</td>
+        <td class="date">{{rideTime}}</td>
+        <td class="number">{{rideAvg}}</td>
+        <td>{{rideType.name}}</td>
+        <td>{{rideBike.brand}} {{rideBike.model}}</td>
+        <td><a href="/user/rideentry?id={{rideId}}">update</a>&nbsp;<a href="/user/ridedelete?id={{rideId}}">delete</a></td>
     </tr>
     {% endfor %}
 </table>

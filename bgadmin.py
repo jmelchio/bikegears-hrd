@@ -8,120 +8,129 @@ Copyright (c) 2008 Melchior I.T. Inc.. All rights reserved.
 """
 
 import os
-import wsgiref.handlers
 from google.appengine.api import users
-from google.appengine.ext import db
-from google.appengine.ext import webapp
-from google.appengine.ext.webapp import template
+from google.appengine.ext import ndb
+import webapp2
+import jinja2
+import logging
 from model import BikeType, RideType
 from forms import BikeTypeForm, RideTypeForm
 from bikegears import FourOhFour
-from helpers import makeUserLinks, makeAdminMenu
+from helpers import make_user_links, make_admin_menu
 
-class MainAdmin(webapp.RequestHandler):
+jinjaEnvironment = jinja2.Environment(
+    loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
+    extensions=['jinja2.ext.autoescape'],
+    autoescape=True)
+
+
+class MainAdmin(webapp2.RequestHandler):
     """Main admin screen handler"""
     def get(self):
-        path = os.path.join(os.path.dirname(__file__), 'template/adminwelcome.html')
-        template_values = makeUserLinks(self.request.uri)
-        template_values['menu'] = makeAdminMenu(page='admin')
-        template_values['bikeTypes'] = BikeType.all()
-        template_values['rideTypes'] = RideType.all()
-        self.response.out.write(template.render(path, template_values))
+        template = jinjaEnvironment.get_template('template/adminwelcome.html')
+        template_values = make_user_links(self.request.uri)
+        template_values['menu'] = make_admin_menu(page='admin')
+        template_values['bikeTypes'] = BikeType.query().fetch()
+        template_values['rideTypes'] = RideType.query().fetch()
+        self.response.out.write(template.render(template_values))
 
-class RideTypeEntry(webapp.RequestHandler):
+
+class RideTypeEntry(webapp2.RequestHandler):
     """Handler for adding and updating RideType objects"""
     def get(self):
-        template_values = makeUserLinks(self.request.uri)
+        template_values = make_user_links(self.request.uri)
+        id = self.request.get('id')
+        
         try:
-            id = int(self.request.get('id'))
-            rideType = RideType.get(db.Key.from_path('RideType', id))
+            ride_type = RideType.get_by_id(int(id))
             template_values['submitValue'] = 'Update'
         except ValueError:
-            rideType = None
+            ride_type = RideType()
             id = None
             template_values['submitValue'] = 'Create'
-        path = os.path.join(os.path.dirname(__file__), 'template/ridetypeentry.html')
-        template_values['menu'] = makeAdminMenu(page='admin/ridetypeentry')
-        template_values['form'] = RideTypeForm(instance=rideType)
+        
+        template = jinjaEnvironment.get_template('template/ridetypeentry.html')
+        template_values['menu'] = make_admin_menu(page='admin/ridetypeentry')
+        template_values['form'] = RideTypeForm(obj=ride_type)
         template_values['id'] = id
-        self.response.out.write(template.render(path, template_values))
+        self.response.out.write(template.render(template_values))
     
     def post(self):
-        try:
-            id = int(self.request.get('_id'))
-            rideType = RideType.get(db.Key.from_path('RideType', id))
-        except ValueError:
-            rideType = None
-            id = None
-        data = RideTypeForm(data=self.request.POST, instance=rideType)
+        id = self.request.get('_id')
         
-        if data.is_valid():
+        try:
+            ride_type = RideType.get_by_id(int(id))
+        except ValueError:
+            ride_type = RideType()
+            id = None
+        
+        form_data = RideTypeForm(self.request.POST, ride_type)
+        
+        if form_data.validate():
             # Save and redirect to admin home page
-            entity = data.save(commit=False)
-            entity.put()
+            form_data.populate_obj(ride_type)
+            ride_type.put()
             self.redirect('/admin')
         else:
             # back to form for editing
-            path = os.path.join(os.path.dirname(__file__), 'template/ridetypeentry.html')
-            template_values = makeUserLinks(self.request.uri)
-            template_values['menu'] = makeAdminMenu(page='admin/ridetypeentry')
+            template = jinjaEnvironment.get_template('template/ridetypeentry.html')
+            template_values = make_user_links(self.request.uri)
+            template_values['menu'] = make_admin_menu(page='admin/ridetypeentry')
             template_values['submitValue'] = 'Fix'
-            template_values['form'] = data
+            template_values['form'] = form_data
             template_values['id'] = id
-            self.response.out.write(template.render(path, template_values))
+            self.response.out.write(template.render(template_values))
     
 
-class BikeTypeEntry(webapp.RequestHandler):
+class BikeTypeEntry(webapp2.RequestHandler):
     """Handler for adding and updating BikeType objects"""
     def get(self):
-        template_values = makeUserLinks(self.request.uri)
+        template_values = make_user_links(self.request.uri)
+        id = self.request.get('id')
+        
         try:
-            id = int(self.request.get('id'))
-            bikeType = BikeType.get(db.Key.from_path('BikeType', id))
+            bike_type = BikeType.get_by_id(int(id))
             template_values['submitValue'] = 'Update'
         except ValueError:
-            bikeType = None
+            bike_type = BikeType()
             id = None
             template_values['submitValue'] = 'Create'
-        path = os.path.join(os.path.dirname(__file__), 'template/biketypeentry.html')
-        template_values['menu'] = makeAdminMenu(page='admin/biketypeentry')
-        template_values['form'] = BikeTypeForm(instance=bikeType)
+            
+        template = jinjaEnvironment.get_template('template/biketypeentry.html')
+        template_values['menu'] = make_admin_menu(page='admin/biketypeentry')
+        template_values['form'] = BikeTypeForm(obj=bike_type)
         template_values['id'] = id
-        self.response.out.write(template.render(path, template_values))
+        self.response.out.write(template.render(template_values))
     
     def post(self):
+        id = self.request.get('_id')
         try:
-            id = int(self.request.get('_id'))
-            bikeType = BikeType.get(db.Key.from_path('BikeType', id))
+            bike_type = BikeType.get_by_id(int(id))
         except ValueError:
-            bikeType = None
+            bike_type = BikeType()
             id = None
-        data = BikeTypeForm(data=self.request.POST, instance=bikeType)
+        form_data = BikeTypeForm(self.request.POST, bike_type)
         
-        if data.is_valid():
+        if form_data.validate():
             # Save and redirect to admin home page
-            entity = data.save(commit=False)
-            entity.put()
+            form_data.populate_obj(bike_type)
+            bike_type.put()
             self.redirect('/admin')
         else:
             # back to form for editing
-            path = os.path.join(os.path.dirname(__file__), 'template/biketypeentry.html')
-            template_values = makeUserLinks(self.request.uri)
-            template_values['menu'] = makeAdminMenu(page='admin/biketypeentry')
+            template = jinjaEnvironment.get_template('template/biketypeentry.html')
+            template_values = make_user_links(self.request.uri)
+            template_values['menu'] = make_admin_menu(page='admin/biketypeentry')
             template_values['submitValue'] = 'Fix'
-            template_values['form'] = data
+            template_values['form'] = form_data
             template_values['id'] = id
-            self.response.out.write(template.render(path, template_values))
-
-def main():
-    application = webapp.WSGIApplication([('/admin', MainAdmin)
-                                        , ('/admin/ridetypeentry', RideTypeEntry)
-                                        , ('/admin/biketypeentry', BikeTypeEntry)
-                                        , ('/admin.*', FourOhFour)]
-                                        , debug=True)
-    wsgiref.handlers.CGIHandler().run(application)
+            self.response.out.write(template.render(template_values))
 
 
-if __name__ == '__main__':
-    main()
+app = webapp2.WSGIApplication([('/admin', MainAdmin)
+                             , ('/admin/ridetypeentry', RideTypeEntry)
+                             , ('/admin/biketypeentry', BikeTypeEntry)
+                             , ('/admin.*', FourOhFour)]
+                             , debug=True)
 
+# That's All Folks!

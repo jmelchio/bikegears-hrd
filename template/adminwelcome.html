@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "template/base.html" %}
 {% block title %}BikeGears - Admin Welcome{% endblock %}
 {% block content %}
 <h2>Admin Page</h2>
@@ -6,7 +6,7 @@
     The admin section lets administrators change information that is that is shared by all users. At this moment this is only bike types and ride types which are used when creating bikes and entering rides for each user. At some point we may find other uses for the admin pages function.
 </p>
 <p>
-	Below is a list of values storeds for bike types and ride types.
+	Below is a list of values stored for bike types and ride types.
 </p>
 <h2>Bike types</h2>
 {% if bikeTypes %}
@@ -17,10 +17,11 @@
 		<th width="20%"></th>
     </tr>
     {% for bikeType in bikeTypes %}
-    <tr class="{% cycle even,odd %}">
+	{% set bikeTypeId = bikeType.key.id() %}
+    <tr class="{{ loop.cycle('even', 'odd') }}">
         <td>{{bikeType.name}}</td>
         <td>{{bikeType.description}}</td>
-        <td><a href="/admin/biketypeentry?id={{bikeType.key.id}}">update</a>&nbsp;<a href="/admin/biketypedelete?id={{bikeType.key.id}}">delete</a></td>
+        <td><a href="/admin/biketypeentry?id={{bikeTypeId}}">update</a>&nbsp;<a href="/admin/biketypedelete?id={{bikeTypeId}}">delete</a></td>
     </tr>
     {% endfor %}
 </table>
@@ -38,10 +39,11 @@
 		<th width="20%"></th>
     </tr>
     {% for rideType in rideTypes %}
-    <tr class="{% cycle even,odd %}">
+	{% set rideTypeId = rideType.key.id() %}
+    <tr class="{{ loop.cycle('even', 'odd') }}">
         <td>{{rideType.name}}</td>
         <td>{{rideType.description}}</td>
-        <td><a href="/admin/ridetypeentry?id={{rideType.key.id}}">update</a>&nbsp;<a href="/admin/ridetypedelete?id={{rideType.key.id}}">delete</a></td>
+        <td><a href="/admin/ridetypeentry?id={{rideTypeId}}">update</a>&nbsp;<a href="/admin/ridetypedelete?id={{rideTypeId}}">delete</a></td>
     </tr>
     {% endfor %}
 </table>

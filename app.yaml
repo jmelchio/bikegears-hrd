@@ -1,7 +1,8 @@
 application: bikegears-hrd
-version: 2
-runtime: python
+version: 3
+runtime: python27
 api_version: 1
+threadsafe: true
 
 handlers:
 - url: /css
@@ -11,10 +12,16 @@ handlers:
 - url: /images
   static_dir: images
 - url: /admin.*
-  script: bgadmin.py
+  script: bgadmin.app
   login: admin
 - url: /user.*
-  script: bikegears.py
+  script: bikegears.app
   login: required
 - url: /
-  script: welcome.py
+  script: welcome.app
+  
+libraries:
+- name: jinja2
+  version: "2.6"
+- name: webapp2
+  version: "2.5.2"

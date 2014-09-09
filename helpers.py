@@ -9,6 +9,7 @@ Copyright (c) 2008 Melchior I.T. Inc.. All rights reserved.
 
 from google.appengine.api import users
 
+
 class MenuEntry(object):
     """The MenuEntry class."""
     def __init__(self, link=None, name=None, active=None):
@@ -17,22 +18,23 @@ class MenuEntry(object):
         self.active = active
 
 
-menuDict = {1:MenuEntry('', 'Home', False)
-            , 2:MenuEntry('user/rideroverview', 'Rider Overview', False)
-            , 3:MenuEntry('user/rideentry', 'Ride Entry', False)
-            , 4:MenuEntry('user/bikeoverview', 'Bike Overview', False)
-            , 5:MenuEntry('user/bikeentry', 'Bike Entry', False)}
+menuDict = {1: MenuEntry('', 'Home', False)
+            , 2: MenuEntry('user/rideroverview', 'Rider Overview', False)
+            , 3: MenuEntry('user/rideentry', 'Ride Entry', False)
+            , 4: MenuEntry('user/bikeoverview', 'Bike Overview', False)
+            , 5: MenuEntry('user/bikeentry', 'Bike Entry', False)}
             
-adminMenuDict = {2:MenuEntry('', 'Home', False)
-            , 1:MenuEntry('admin', 'Admin Home', False)
-            , 3:MenuEntry('admin/ridetypeentry', 'Ride Type Entry', False)
-            , 4:MenuEntry('admin/biketypeentry', 'Bike Type Entry', False)}
+adminMenuDict = {2: MenuEntry('', 'Home', False)
+                 , 1: MenuEntry('admin', 'Admin Home', False)
+                 , 3: MenuEntry('admin/ridetypeentry', 'Ride Type Entry', False)
+                 , 4: MenuEntry('admin/biketypeentry', 'Bike Type Entry', False)}
 
-def makeMenu(page=None, user=None):
-    menu=[]
-    keyList = menuDict.keys()
-    keyList.sort()
-    for key in keyList:
+
+def make_menu(page=None, user=None):
+    menu = []
+    key_list = menuDict.keys()
+    key_list.sort()
+    for key in key_list:
         if page == menuDict[key].link:
             menuDict[key].active = True
         else:
@@ -40,11 +42,12 @@ def makeMenu(page=None, user=None):
         menu.append(menuDict[key])
     return menu
 
-def makeAdminMenu(page=None, user=None):
-    menu=[]
-    keyList = adminMenuDict.keys()
-    keyList.sort()
-    for key in keyList:
+
+def make_admin_menu(page=None, user=None):
+    menu = []
+    key_list = adminMenuDict.keys()
+    key_list.sort()
+    for key in key_list:
         if page == adminMenuDict[key].link:
             adminMenuDict[key].active = True
         else:
@@ -53,7 +56,7 @@ def makeAdminMenu(page=None, user=None):
     return menu
 
 
-def makeUserLinks(request_uri):
+def make_user_links(request_uri):
     user = users.get_current_user()
     
     if user:
@@ -66,3 +69,5 @@ def makeUserLinks(request_uri):
         url_linktext = 'Login'
     
     return {'url': url, 'url_linktext': url_linktext, 'user_name': user_name}
+
+# That's All Folks !!
