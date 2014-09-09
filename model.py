@@ -65,8 +65,6 @@ class BikeRide(ndb.Model):
             return time(hour=0, minute=0, second=0).isoformat()
         
         hour = 0
-        # minute = 0
-        # second = 0
         if self.rideTimeSeconds >= 3600:
             hour = self.rideTimeSeconds / 3600
             remainder = self.rideTimeSeconds % 3600
