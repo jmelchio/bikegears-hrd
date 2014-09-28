@@ -7,7 +7,7 @@
 */
 body { 
     background: #fde7a8 url(../images/backgroundfade.png) repeat-x;
-	/* color: #696969; */
+	color: #323232;
     font-size: small;
     font-family: verdana, sans-serif;
     padding: 0 0 0 0;
@@ -23,8 +23,8 @@ div {
 }
 
 h2 { 
-    font-size: 110%;
-    font-style: italic;
+    font-size: 120%;
+    font-style: normal;
 }
 
 p { 
@@ -57,24 +57,30 @@ div#container {
     background: rgb(250, 250, 250) url(../images/sprockets-scaled-fade-bw.gif) -100px -100px no-repeat fixed;
     padding: 0 0 0 0; 
     border: 1px solid #999999; 
-    border-radius: 15px;
+    border-radius: 5px;
 }
 
 div#header { 
     width: 100%;
     padding: 0.2em 0 0.1em 0;
-    border: solid #99CCFF;
-    border-width: 0 0 1px 0;
-    border-top-left-radius: 15px;
-    border-top-right-radius: 15px;
+    border: 0 solid #99CCFF;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
     background: #0d5dc1 url(../images/sprockets-scaled-fade-blue.gif) -100px -100px no-repeat fixed;
 	clear: both;
 } 
 
 #header p { 
-    margin: 0 0 0 0;
-    padding: 0 0 0 0;
-    text-align: center;
+    margin: 1em 1em 1em 14em;
+    padding: 0.5em 1em 0.5em 2em;
+    text-align: left;
+}
+
+#header p a {
+    color: whitesmoke;
+    font-size: 350%;
+    font-weight: bold;
+    text-decoration: none;
 }
 
 #header p + p {
@@ -83,25 +89,29 @@ div#header {
     margin: 0.2em 4em;
 }
 
-#header a {
-    color: white;
+#header p + p a {
+    color: whitesmoke;
+    font-size: 100%;
+    font-weight: normal;
     text-decoration: none;
-    font-style: italic;
+    font-style: normal;
 }
 
 div#menu { 
 	float: left;
 	width: 12em;
-    margin: 1em ;
+    margin: 3.6em 1em 4em 1em ;
     padding: 0;
-    border: 1px solid #99CCFF;
-    border-radius: 10px;
+    border: solid #828282;
+    border-width: 1px 0 1px 0;
+    border-radius: 0px;
 }
 
+
 #menu p { /*margin-left: 1em;*/
-    font-style: italic;
+    /* font-style: italic; */
     color: #724085;
-    border-radius: 8px;
+    border-radius: 0px;
 }
 
 div#content { 
@@ -111,13 +121,14 @@ div#content {
 }
 
 #content h2 { 
-    border: solid 1px #99CCFF;
-    border-radius: 8px;
+    border: solid #828282;
+    border-width: 0 0 1px 0;
+    border-radius: 0px;
     text-align: left;
-    padding: 0.2em 1em 0.1em 2em;
+    padding: 0.5em 0.5em 0.5em 2em;
     margin: 0 0 0 0;
-    color: white;
-    background: #0d5dc1 url(../images/sprockets-scaled-fade-blue.gif) -100px -100px no-repeat fixed;
+    color: #323232;
+    /* background: #0d5dc1 url(../images/sprockets-scaled-fade-blue.gif) -100px -100px no-repeat fixed; */
 }
 
 div#footer { 
@@ -126,7 +137,7 @@ div#footer {
     text-align: center;
     margin: 1em 0 0.75em 0;
     padding: 0.25em 0 0.25em 0;
-    border: solid #99CCFF;
+    border: solid #828282;
     border-width: 1px 0 0 0;
 }
 
@@ -145,18 +156,18 @@ div#footer {
 #menu a { 
     display: block;
     margin: 0.2em;
-    padding: 0.2em 0.5em 0.1em 0.5em;
+    padding: 0.5em;
     text-decoration: none;
     font-weight: bold;
-    color: #0d5dc1;
+    color: #828282;
     border-collapse: collapse;
     border: 0 solid rgb(130, 130, 130);
-    border-radius: 8px;
+    border-radius: 5px;
 }
 
 #menu a:hover { 
-    color: white;
-    background: #0d5dc1 url(../images/sprockets-scaled-fade-blue.gif) -100px -100px no-repeat fixed;
+    color: orange;
+    /* background: #0d5dc1 url(../images/sprockets-scaled-fade-blue.gif) -100px -100px no-repeat fixed; */
 }
 
 #menu a:first-child {
@@ -170,16 +181,17 @@ div#footer {
 #menu p {
     display: block;
     margin: 0.2em;
-    padding: 0.2em 0.5em 0.1em 0.5em;
+    padding: 0.5em;
     text-decoration: none;
     font-weight: bold;
-    color: white;
-    background: #99CCFF url(../images/sprockets-scaled-fade-blue.gif) -100px -100px no-repeat fixed;
+    color: darkorange;
+/*    background: #99CCFF url(../images/sprockets-scaled-fade-blue.gif) -100px -100px no-repeat fixed; */
     border-collapse: collapse;
-    border: 0 solid rgb(130, 130, 130);
+    border: solid darkorange;
+    border-width: 0 0 0 1px;
 }
 
-p.error { 
+p.error {
     color: red;
 }
 

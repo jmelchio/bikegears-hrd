@@ -18,8 +18,10 @@ jinjaEnvironment = jinja2.Environment(
     extensions=['jinja2.ext.autoescape'],
     autoescape=True)
 
+
 class Welcome(webapp2.RequestHandler):
     """Main welcome page handler for the application"""
+
     def get(self):
         template = jinjaEnvironment.get_template('template/welcome.html')
         template_values = make_user_links(self.request.uri)
@@ -28,7 +30,7 @@ class Welcome(webapp2.RequestHandler):
 
 
 app = webapp2.WSGIApplication([('/', Welcome)
-                             , ('/.*', FourOhFour)]
-                             , debug=True)
+                                  , ('/.*', FourOhFour)]
+                              , debug=True)
 
 # That's All Folks!

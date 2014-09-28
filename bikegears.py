@@ -15,15 +15,16 @@ from google.appengine.ext import ndb
 from model import Bike, BikeRide, BikeType, RideType
 from forms import BikeForm, BikeRideForm
 from helpers import make_menu, make_user_links
-from datetime import date
 
 jinjaEnvironment = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
     extensions=['jinja2.ext.autoescape'],
     autoescape=True)
 
+
 class BikeOverview(webapp2.RequestHandler):
     """overview page for bikes of the rider"""
+
     def get(self):
         cur_user = users.get_current_user()
         template = jinjaEnvironment.get_template('template/bikeoverview.html')
@@ -43,6 +44,7 @@ class RiderOverview(webapp2.RequestHandler):
        queries supported by the data source for AppEngine I have to come up with a suitable
        way of providing the totals without making it too much of a hack.
     """
+
     def get(self):
         cur_user = users.get_current_user()
         template = jinjaEnvironment.get_template('template/rideroverview.html')
@@ -60,6 +62,7 @@ class BikeEntry(webapp2.RequestHandler):
        Updating and inserting is done in the post method. If a key is provided the record belonging 
        to the key is updated, otherwise a new record is inserted in the table.
     """
+
     def get(self):
         error_list = []
         cur_user = users.get_current_user()
@@ -77,7 +80,7 @@ class BikeEntry(webapp2.RequestHandler):
             id = None
             bike = Bike()
             template_values['submitValue'] = 'Create'
-        
+
         if len(error_list) > 0:
             logging.info('%s' % error_list)
             self.redirect('user/errorPage')
@@ -85,7 +88,8 @@ class BikeEntry(webapp2.RequestHandler):
             template = jinjaEnvironment.get_template('template/bikeentry.html')
             template_values['menu'] = make_menu(page='user/bikeentry')
             bike_form = BikeForm(obj=bike)
-            bike_form.bikeType.choices = [(bikeType.key.urlsafe(), bikeType.name) for bikeType in BikeType.query().fetch()]
+            bike_form.bikeType.choices = [(bikeType.key.urlsafe(), bikeType.name) for bikeType in
+                                          BikeType.query().fetch()]
             bike_form.bikeType.data = (bike.bikeType.urlsafe() if bike.bikeType else 0)
             template_values['form'] = bike_form
             template_values['id'] = id
@@ -98,14 +102,15 @@ class BikeEntry(webapp2.RequestHandler):
         except ValueError:
             bike = Bike()
             id = None
-            
+
         form_data = BikeForm(self.request.POST, bike)
         form_data.bikeType.choices = [(bikeType.key.urlsafe(), bikeType.name) for bikeType in BikeType.query().fetch()]
         logging.info('%s' % form_data.bikeType.data)
-        
+
         if form_data.validate():
             # Save and redirect to admin home page
-            form_data.bikeType.data = ndb.Key(urlsafe=form_data.bikeType.data) # translate urlsafe key string to actual key
+            form_data.bikeType.data = ndb.Key(
+                urlsafe=form_data.bikeType.data)  # translate urlsafe key string to actual key
             form_data.populate_obj(bike)
             bike.bikeRider = users.get_current_user()
             bike.put()
@@ -119,10 +124,11 @@ class BikeEntry(webapp2.RequestHandler):
             template_values['form'] = form_data
             template_values['id'] = id
             self.response.out.write(template.render(template_values))
-    
+
 
 class RideEntry(webapp2.RequestHandler):
     """handler for entry of the bike rides both get and post actions"""
+
     def get(self):
         cur_user = users.get_current_user();
         template_values = make_user_links(self.request.uri)
@@ -140,22 +146,24 @@ class RideEntry(webapp2.RequestHandler):
             id = None
             bike_ride = BikeRide()
             template_values['submitValue'] = 'Create'
-        
+
         if len(error_list) > 0:
             logging.info('%s' % error_list)
             self.redirect('/user/errorPage')
         else:
             bike_ride_form = BikeRideForm(obj=bike_ride)
-            bike_ride_form.bike.choices = [(bike.key.urlsafe(), bike.brand + ' ' + bike.model) for bike in Bike.query(Bike.bikeRider==cur_user).fetch()]
+            bike_ride_form.bike.choices = [(bike.key.urlsafe(), bike.brand + ' ' + bike.model) for bike in
+                                           Bike.query(Bike.bikeRider == cur_user).fetch()]
             bike_ride_form.bike.data = (bike_ride.bike.urlsafe() if bike_ride.bike else 0)
-            bike_ride_form.rideType.choices = [(rideType.key.urlsafe(), rideType.name) for rideType in RideType.query().fetch()]
+            bike_ride_form.rideType.choices = [(rideType.key.urlsafe(), rideType.name) for rideType in
+                                               RideType.query().fetch()]
             bike_ride_form.rideType.data = (bike_ride.rideType.urlsafe() if bike_ride.rideType else 0)
             template_values['form'] = bike_ride_form
             template = jinjaEnvironment.get_template('template/rideentry.html')
             template_values['menu'] = make_menu(page='user/rideentry')
             template_values['id'] = id
             self.response.out.write(template.render(template_values))
-    
+
     def post(self):
         try:
             id = int(self.request.get('_id'))
@@ -163,13 +171,13 @@ class RideEntry(webapp2.RequestHandler):
         except ValueError:
             bike_ride = BikeRide()
             id = None
-            
+
         form_data = BikeRideForm(self.request.POST, bike_ride)
         form_data.bike.choices = [(bike.key.urlsafe(), bike.brand) for bike in Bike.query().fetch()]
         form_data.rideType.choices = [(rideType.key.urlsafe(), rideType.name) for rideType in RideType.query().fetch()]
         logging.info("data from bikeride form is: %s", form_data)
         logging.info("data from the bikeride request is: %s", self.request)
-        
+
         if form_data.validate():
             form_data.bike.data = ndb.Key(urlsafe=form_data.bike.data)
             form_data.rideType.data = ndb.Key(urlsafe=form_data.rideType.data)
@@ -185,10 +193,11 @@ class RideEntry(webapp2.RequestHandler):
             template_values['form'] = form_data
             template_values['id'] = id
             self.response.out.write(template.render(template_values))
-    
+
 
 class FourOhFour(webapp2.RequestHandler):
     """Handler for all pages that don't have an explicit handler (404)"""
+
     def get(self):
         template = jinjaEnvironment.get_template('template/under_construction.html')
         template_values = make_user_links(self.request.uri)
@@ -198,10 +207,10 @@ class FourOhFour(webapp2.RequestHandler):
 
 
 app = webapp2.WSGIApplication([('/user/bikeoverview', BikeOverview)
-                              , ('/user/rideroverview', RiderOverview)
-                              , ('/user/rideentry', RideEntry)
-                              , ('/user/bikeentry', BikeEntry)
-                              , ('/user.*', FourOhFour)]
+                                  , ('/user/rideroverview', RiderOverview)
+                                  , ('/user/rideentry', RideEntry)
+                                  , ('/user/bikeentry', BikeEntry)
+                                  , ('/user.*', FourOhFour)]
                               , debug=True)
 
 # That's All Folks!
