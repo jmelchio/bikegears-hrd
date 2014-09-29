@@ -104,14 +104,14 @@ div#menu {
     padding: 0;
     border: solid #828282;
     border-width: 1px 0 0 0;
-    border-radius: 0px;
+    border-radius: 0;
 }
 
 
 #menu p { /*margin-left: 1em;*/
     /* font-style: italic; */
     color: #724085;
-    border-radius: 0px;
+    border-radius: 0;
 }
 
 div#content { 
@@ -123,7 +123,7 @@ div#content {
 #content h2 { 
     border: solid #828282;
     border-width: 0 0 1px 0;
-    border-radius: 0px;
+    border-radius: 0;
     text-align: left;
     padding: 0.5em 0.5em 0.5em 2em;
     margin: 0 0 0 0;
