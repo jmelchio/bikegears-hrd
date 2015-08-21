@@ -14,7 +14,7 @@ from google.appengine.api import users
 from google.appengine.ext import ndb
 from model import Bike, BikeRide, BikeType, RideType
 from forms import BikeForm, BikeRideForm
-from helpers import make_menu, make_user_links
+from helpers import make_menu, make_user_links, get_profile
 
 jinjaEnvironment = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
@@ -26,11 +26,11 @@ class BikeOverview(webapp2.RequestHandler):
     """overview page for bikes of the rider"""
 
     def get(self):
-        cur_user = users.get_current_user()
+        profile = get_profile()
         template = jinjaEnvironment.get_template('template/bikeoverview.html')
         template_values = make_user_links(self.request.uri)
         template_values['menu'] = make_menu(page='user/bikeoverview')
-        template_values['bikes'] = Bike.query(Bike.bikeRider == cur_user).fetch()
+        template_values['bikes'] = Bike.query(ancestor=profile.key).fetch()
         template_values['biketypes'] = BikeType.query().fetch()
         self.response.out.write(template.render(template_values))
 
@@ -46,11 +46,11 @@ class RiderOverview(webapp2.RequestHandler):
     """
 
     def get(self):
-        cur_user = users.get_current_user()
+        profile = get_profile()
         template = jinjaEnvironment.get_template('template/rideroverview.html')
         template_values = make_user_links(self.request.uri)
         template_values['menu'] = make_menu(page='user/rideroverview')
-        template_values['rides'] = BikeRide.query(BikeRide.bikeRider == cur_user).order(-BikeRide.date).fetch(20)
+        template_values['rides'] = BikeRide.query(ancestor=profile.key).order(-BikeRide.date).fetch(20)
         self.response.out.write(template.render(template_values))
 
 
@@ -65,19 +65,21 @@ class BikeEntry(webapp2.RequestHandler):
 
     def get(self):
         error_list = []
-        cur_user = users.get_current_user()
+        profile = get_profile()
         template_values = make_user_links(self.request.uri)
-        id = self.request.get('id')
-        try:
-            bike = Bike.get_by_id(int(id))
+        key = self.request.get('key')
+        # below test is a bit of a hack because an empty key is returned as the string 'None' sometimes
+        if key and (key != 'None'):
+            b_key = ndb.Key(urlsafe=key)
+            bike = b_key.get()
             template_values['submitValue'] = 'Update'
-            try:
-                if bike.bikeRider != cur_user:
+            if bike:
+                if b_key.parent() != profile.key:
                     error_list.append('Attempt to edit bike not owned by user')
-            except AttributeError:
+            else:
                 error_list.append('Bike not found')
-        except ValueError:
-            id = None
+        else:
+            key = None
             bike = Bike()
             template_values['submitValue'] = 'Create'
 
@@ -92,27 +94,27 @@ class BikeEntry(webapp2.RequestHandler):
                                           BikeType.query().fetch()]
             bike_form.bikeType.data = (bike.bikeType.urlsafe() if bike.bikeType else 0)
             template_values['form'] = bike_form
-            template_values['id'] = id
+            template_values['key'] = key
             self.response.out.write(template.render(template_values))
 
     def post(self):
-        id = self.request.get('_id')
-        try:
-            bike = Bike.get_by_id(int(id))
-        except ValueError:
-            bike = Bike()
-            id = None
+        key = self.request.get('key')
+        if key and (key != 'None'):
+            b_key = ndb.Key(urlsafe=key)
+            bike = b_key.get()
+        else:
+            profile = get_profile()
+            bike = Bike(parent=profile.key)
 
         form_data = BikeForm(self.request.POST, bike)
         form_data.bikeType.choices = [(bikeType.key.urlsafe(), bikeType.name) for bikeType in BikeType.query().fetch()]
         logging.info('%s' % form_data.bikeType.data)
 
         if form_data.validate():
-            # Save and redirect to admin home page
+            # Save and redirect to bike overview page
             form_data.bikeType.data = ndb.Key(
                 urlsafe=form_data.bikeType.data)  # translate urlsafe key string to actual key
             form_data.populate_obj(bike)
-            bike.bikeRider = users.get_current_user()
             bike.put()
             self.redirect('/user/bikeoverview')
         else:
@@ -122,7 +124,7 @@ class BikeEntry(webapp2.RequestHandler):
             template_values['menu'] = make_menu(page='user/bikeentry')
             template_values['submitValue'] = 'Fix'
             template_values['form'] = form_data
-            template_values['id'] = id
+            template_values['key'] = key
             self.response.out.write(template.render(template_values))
 
 

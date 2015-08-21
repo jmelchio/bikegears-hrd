@@ -19,7 +19,7 @@
     </tr>
     <tbody>
         {% for bike in bikes %}
-		{% set bikeId = bike.key.id() %}
+		{% set bikeKey = bike.key.urlsafe() %}
 		{% set bikeType = bike.bikeType.get() %}
         <tr class="{{ loop.cycle('even', 'odd') }}">
             <td class="nowrap">{{bike.brand}}</td>
@@ -28,7 +28,7 @@
             <td>{{bike.color}}</td>
             <td class="nowrap">{{bikeType.name}}</td>
             <td>{{bike.description}}</td>
-            <td><a href="/user/bikeentry?id={{bikeId}}">update</a>&nbsp;<a href="/user/bikedelete?id={{bikeId}}">delete</a></td>
+            <td><a href="/user/bikeentry?key={{bikeKey}}">update</a>&nbsp;<a href="/user/bikedelete?key={{bikeKey}}">delete</a></td>
         </tr>
         {% endfor %}
     </tbody>
