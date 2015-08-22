@@ -6,29 +6,13 @@
 <p>
     <form action="/user/rideentry" method="post">
         <fieldset>
-            <input name="_id" type="hidden" value="{{id}}"/>
+            <input name="key" type="hidden" value="{{key}}"/>
             <table>
                 <tr>
                     <td class="nowrap"><label for="id_date">Ride date</label></td>
                     <td>{{ form.date }}
                         {% if form.date.errors %}
                         <span class="error">{{ form.date.errors|join(', ')}}</span>
-                        {% endif %}
-                    </td>
-                </tr>
-                <tr>
-                    <td class="nowrap"><label for="id_startLocation">Start location</label></td>
-                    <td>{{ form.startLocation }}
-                        {% if form.startLocation.errors %}
-                        <span class="error">{{ form.startLocation.errors|join(', ')}}</span>
-                        {% endif %}
-                    </td>
-                </tr>
-                <tr>
-                    <td class="nowrap"><label for="id_finishLocation">Finish location</label></td>
-                    <td>{{ form.finishLocation }}
-                        {% if form.finishLocation.errors %}
-                        <span class="error">{{ form.finishLocation.errors|join(', ')}}</span>
                         {% endif %}
                     </td>
                 </tr>

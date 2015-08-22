@@ -21,3 +21,9 @@ indexes:
   - name: bikeRider
   - name: date
     direction: desc
+
+- kind: BikeRide
+  ancestor: yes
+  properties:
+  - name: date
+    direction: desc
