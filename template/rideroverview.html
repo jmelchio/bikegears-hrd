@@ -18,7 +18,7 @@
         <th></th>
     </tr>
     {% for ride in rides %}
-	{% set rideId = ride.key.id() %}
+	{% set rideKey = ride.key.urlsafe() %}
 	{% set rideBike = ride.bike.get() %}
 	{% set rideTime = ride.get_ride_time_as_string() %}
 	{% set rideAvg = ride.get_average_speed() %}
@@ -30,7 +30,7 @@
         <td class="number">{{rideAvg}}</td>
         <td>{{rideType.name}}</td>
         <td>{{rideBike.brand}} {{rideBike.model}}</td>
-        <td><a href="/user/rideentry?id={{rideId}}">update</a>&nbsp;<a href="/user/ridedelete?id={{rideId}}">delete</a></td>
+        <td><a href="/user/rideentry?key={{rideKey}}">update</a>&nbsp;<a href="/user/ridedelete?key={{rideKey}}">delete</a></td>
     </tr>
     {% endfor %}
 </table>

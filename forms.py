@@ -23,8 +23,6 @@ class BikeForm(Form):
 class BikeRideForm(Form):
     """docstring for BikeRideForm"""
     date = DateField(u'Ride date', validators=[validators.input_required()])
-    startLocation = StringField(u'Start location')
-    finishLocation = StringField(u'Finish location')
     distanceKm = FloatField(u'Distance', validators=[validators.input_required()])
     rideTimeSeconds = IntegerField(u'Ride Time (secs)')
     averageHr = IntegerField(u'Average HR')
