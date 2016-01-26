@@ -23,19 +23,19 @@ class MenuEntry(object):
         self.active = active
 
 
-menuDict = {1: MenuEntry('', 'Home', False)
-    , 2: MenuEntry('user/rideroverview', 'Rider Overview', False)
-    , 3: MenuEntry('user/rideentry', 'Ride Entry', False)
-    , 4: MenuEntry('user/bikeoverview', 'Bike Overview', False)
-    , 5: MenuEntry('user/bikeentry', 'Bike Entry', False)}
+menuDict = {1: MenuEntry('', 'Home', False),
+            2: MenuEntry('user/rideroverview', 'Rider Overview', False),
+            3: MenuEntry('user/rideentry', 'Ride Entry', False),
+            4: MenuEntry('user/bikeoverview', 'Bike Overview', False),
+            5: MenuEntry('user/bikeentry', 'Bike Entry', False)}
 
-adminMenuDict = {2: MenuEntry('', 'Home', False)
-    , 1: MenuEntry('admin', 'Admin Home', False)
-    , 3: MenuEntry('admin/ridetypeentry', 'Ride Type Entry', False)
-    , 4: MenuEntry('admin/biketypeentry', 'Bike Type Entry', False)}
+adminMenuDict = {2: MenuEntry('', 'Home', False),
+                 1: MenuEntry('admin', 'Admin Home', False),
+                 3: MenuEntry('admin/ridetypeentry', 'Ride Type Entry', False),
+                 4: MenuEntry('admin/biketypeentry', 'Bike Type Entry', False)}
 
 
-def make_menu(page=None, user=None):
+def make_menu(page=None):
     menu = []
     key_list = menuDict.keys()
     key_list.sort()
@@ -48,7 +48,7 @@ def make_menu(page=None, user=None):
     return menu
 
 
-def make_admin_menu(page=None, user=None):
+def make_admin_menu(page=None):
     menu = []
     key_list = adminMenuDict.keys()
     key_list.sort()

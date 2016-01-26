@@ -6,20 +6,21 @@ bikegears.py
 Created by Joris Melchior on 2008-06-06.
 Copyright (c) 2008 Melchior I.T. Inc.. All rights reserved.
 """
-import os
-import webapp2
-import jinja2
 import logging
-from google.appengine.api import users
+import os
+
+import jinja2
+import webapp2
 from google.appengine.ext import ndb
-from model import Bike, BikeRide, BikeType, RideType
+
 from forms import BikeForm, BikeRideForm
 from helpers import make_menu, make_user_links, get_profile
+from model import Bike, BikeRide, BikeType, RideType
 
 jinjaEnvironment = jinja2.Environment(
-    loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
-    extensions=['jinja2.ext.autoescape'],
-    autoescape=True)
+        loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
+        extensions=['jinja2.ext.autoescape'],
+        autoescape=True)
 
 
 class BikeOverview(webapp2.RequestHandler):
@@ -117,13 +118,14 @@ class BikeEntry(webapp2.RequestHandler):
             self.redirect('user/errorPage')
         else:
             form_data = BikeForm(self.request.POST, bike)
-            form_data.bikeType.choices = [(bikeType.key.urlsafe(), bikeType.name) for bikeType in BikeType.query().fetch()]
+            form_data.bikeType.choices = [(bikeType.key.urlsafe(), bikeType.name) for bikeType in
+                                          BikeType.query().fetch()]
             logging.info('%s' % form_data.bikeType.data)
 
             if form_data.validate():
                 # Save and redirect to bike overview page
                 form_data.bikeType.data = ndb.Key(
-                    urlsafe=form_data.bikeType.data)  # translate urlsafe key string to actual key
+                        urlsafe=form_data.bikeType.data)  # translate urlsafe key string to actual key
                 form_data.populate_obj(bike)
                 bike.put()
                 self.redirect('/user/bikeoverview')
@@ -198,7 +200,8 @@ class RideEntry(webapp2.RequestHandler):
         else:
             form_data = BikeRideForm(self.request.POST, bike_ride)
             form_data.bike.choices = [(bike.key.urlsafe(), bike.brand) for bike in Bike.query().fetch()]
-            form_data.rideType.choices = [(rideType.key.urlsafe(), rideType.name) for rideType in RideType.query().fetch()]
+            form_data.rideType.choices = [(rideType.key.urlsafe(), rideType.name) for rideType in
+                                          RideType.query().fetch()]
             logging.info("data from bikeride form is: %s", form_data)
             logging.info("data from the bikeride request is: %s", self.request)
 
@@ -229,11 +232,8 @@ class FourOhFour(webapp2.RequestHandler):
         self.response.out.write(template.render(template_values))
 
 
-app = webapp2.WSGIApplication([('/user/bikeoverview', BikeOverview)
-                                  , ('/user/rideroverview', RiderOverview)
-                                  , ('/user/rideentry', RideEntry)
-                                  , ('/user/bikeentry', BikeEntry)
-                                  , ('/user.*', FourOhFour)]
-                              , debug=True)
+app = webapp2.WSGIApplication(
+        [('/user/bikeoverview', BikeOverview), ('/user/rideroverview', RiderOverview), ('/user/rideentry', RideEntry),
+         ('/user/bikeentry', BikeEntry), ('/user.*', FourOhFour)], debug=True)
 
 # That's All Folks!

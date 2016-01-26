@@ -8,10 +8,12 @@ Copyright (c) 2008 Melchior I.T. Inc.. All rights reserved.
 """
 
 import os
-import webapp2
+
 import jinja2
-from helpers import make_menu, make_user_links
+import webapp2
+
 from bikegears import FourOhFour
+from helpers import make_menu, make_user_links
 
 jinjaEnvironment = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
@@ -29,8 +31,8 @@ class Welcome(webapp2.RequestHandler):
         self.response.out.write(template.render(template_values))
 
 
-app = webapp2.WSGIApplication([('/', Welcome)
-                                  , ('/.*', FourOhFour)]
-                              , debug=True)
+app = webapp2.WSGIApplication([('/', Welcome),
+                               ('/.*', FourOhFour)],
+                              debug=True)
 
 # That's All Folks!
