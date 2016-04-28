@@ -232,8 +232,12 @@ class FourOhFour(webapp2.RequestHandler):
         self.response.out.write(template.render(template_values))
 
 
-app = webapp2.WSGIApplication(
-        [('/user/bikeoverview', BikeOverview), ('/user/rideroverview', RiderOverview), ('/user/rideentry', RideEntry),
-         ('/user/bikeentry', BikeEntry), ('/user.*', FourOhFour)], debug=True)
+app = webapp2.WSGIApplication([
+    ('/user/bikeoverview', BikeOverview),
+    ('/user/rideroverview', RiderOverview),
+    ('/user/rideentry', RideEntry),
+    ('/user/bikeentry', BikeEntry),
+    ('/user.*', FourOhFour)],
+    debug=True)
 
 # That's All Folks!
